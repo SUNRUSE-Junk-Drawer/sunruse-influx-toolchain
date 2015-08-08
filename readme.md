@@ -89,11 +89,11 @@ When multiple functions exist with the same name, whichever is the most specific
 		
 The following primitive types exist by default:
 
-| Name    | Literal examples      |
-| ------- | --------------------- |
-| boolean | true false            |
-| int     | 0 -4 7                |
-| float   | 0.0 0.4 4.5 -0.7 -7.3 |
+| Name  | Literal examples      |
+| ----- | --------------------- |
+| bool  | true false            |
+| int   | 0 -4 7                |
+| float | 0.0 0.4 4.5 -0.7 -7.3 |
 
 The following functions are natively implemented by default:
 
@@ -105,19 +105,20 @@ The following functions are natively implemented by default:
 * multiply a float, b float -> float
 * divide a int, b int -> int
 * divide a float, b float -> float
+* negate int -> int
+* negate float -> float
 * equal a int, b int -> bool
 * equal a float, b float -> bool
-* lessThan a int, b int -> bool
-* lessThan a float, b float -> bool
-* greaterThan a int, b int -> bool
-* greaterThan a float, b float -> bool
-* greaterThanOrEqual a int, b int -> bool
-* greaterThanOrEqual a float, b float -> bool
+* less a int, b int -> bool
+* less a float, b float -> bool
+* lessOrEqual a int, b int -> bool
+* lessOrEqual a float, b float -> bool
+* greater a int, b int -> bool
+* greater a float, b float -> bool
+* greaterOrEqual a int, b int -> bool
+* greaterOrEqual a float, b float -> bool
 * not bool -> bool
 * or a bool, b bool -> bool
 * and a bool, b bool -> bool
 * xor a bool, b bool -> bool
-* nor a bool, b bool -> bool
-* nand a bool, b bool -> bool
-* xnor a bool, b bool -> bool
 * switch a, b, on bool -> anything
