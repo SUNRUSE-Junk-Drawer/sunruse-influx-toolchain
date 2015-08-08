@@ -1,10 +1,9 @@
 require "jasmine-collection-matchers"
-rewire = require "rewire"
 
 describe "getValue", ->
 	getValue = tokenized = funct = undefined
 	beforeEach ->
-		getValue = rewire "./getValue"
+		getValue = require "./getValue"
 		tokenized = 
 			primitives:
 				testPrimitiveA: ->

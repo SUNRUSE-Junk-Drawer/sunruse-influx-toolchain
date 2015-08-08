@@ -1,10 +1,9 @@
 require "jasmine-collection-matchers"
-rewire = require "rewire"
 
 describe "tokenizer", ->
 	tokenizer = input = undefined
 	beforeEach ->
-		tokenizer = rewire "./tokenizer"
+		tokenizer = require "./tokenizer"
 		input = 
 			test_file_a: 
 				"""
