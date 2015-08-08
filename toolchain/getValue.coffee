@@ -10,5 +10,18 @@
 #	When the starting value is "input", the input value object.
 #	When the starting value is the name of a temporary variable, the result of
 #	compileExpression for that temporary variable. 
-module.exports = (tokenized, value, name) ->
-	throw "notImplemented"
+
+module.exports = (tokenized, input, token, funct) ->
+	if token is "input" then return input
+	for primitive of tokenized.primitives
+		value = tokenized.primitives[primitive] token
+		if value isnt undefined
+			return unused =
+				score: 0
+				primitive:
+					type: primitive
+					value: value
+	if funct.declarations[token]
+		return module.exports.compileExpression tokenized, input, funct.declarations[token], funct
+		
+module.exports.compileExpression = require "./compileExpression"
