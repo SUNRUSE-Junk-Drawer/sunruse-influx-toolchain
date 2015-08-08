@@ -39,5 +39,5 @@ module.exports = (grunt) ->
         watch:
             options:
                 atBegin: true
-            files: ["gruntfile.coffee", "toolchain/**/*"]
+            files: ["gruntfile.coffee", "toolchain/**/*", "platforms/**/*"]
             tasks: ["build", "test", "deploy"]
