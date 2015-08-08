@@ -54,6 +54,7 @@
 #		name: String identifying the function.
 #		compile: Takes a value object and returns a new value object describing 
 #			the output if compilation succeeded, else, falsy.
+#		output: String identifying the primitive type returned. 
 module.exports = (files) ->
 	output = []
 	for filename of files

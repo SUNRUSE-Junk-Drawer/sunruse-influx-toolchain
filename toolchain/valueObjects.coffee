@@ -4,8 +4,9 @@
 #		properties inside the value, and the values are the value objects held.
 #	native: When truthy, the value is the result of executing a native
 #		function.  An object containing:
-#			function: The native function which was executed.
 #			input: The input to the native function.
+#		Other data may be present; used internally by the current platform's 
+#		compiler.
 #	primitive: When truthy, the value is a primitive constant.  An object
 #		containing:
 #			type: String specifying the name of the primitive type.
