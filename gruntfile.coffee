@@ -31,11 +31,10 @@ module.exports = (grunt) ->
         coffee:
             config:
                 files: [
-                    expand: true
-                    cwd: "toolchain"
-                    src: ["**/*.coffee"]
-                    dest: "build"
-                    ext: ".js"
+                        expand: true
+                        src: ["toolchain/**/*.coffee", "platforms/**/*.coffee"]
+                        dest: "build"
+                        ext: ".js"
                 ]
         watch:
             options:
