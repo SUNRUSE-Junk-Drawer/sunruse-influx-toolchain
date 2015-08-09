@@ -14,7 +14,7 @@
 module.exports = (tokenized, input, token, funct) ->
 	if token is "input" then return input
 	for primitive of tokenized.primitives
-		value = tokenized.primitives[primitive] token
+		value = tokenized.primitives[primitive].parse token
 		if value isnt undefined
 			return unused =
 				score: 0

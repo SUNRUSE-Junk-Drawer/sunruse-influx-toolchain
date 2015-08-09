@@ -6,12 +6,30 @@ describe "getValue", ->
 		getValue = require "./getValue"
 		tokenized = 
 			primitives:
-				testPrimitiveA: ->
-				testPrimitiveB: ->
-				testPrimitiveC: ->
-				testPrimitiveD: ->
-				testPrimitiveE: ->
-				testPrimitiveF: ->
+				testPrimitiveA: 
+					parse: (token) ->
+						if token is "Test Literal A"
+							false						
+				testPrimitiveB: 
+					parse: (token) ->
+						if token is "Test Literal B"
+							"Test Primitive"						
+				testPrimitiveC: 
+					parse: (token) ->
+						if token is "Test Literal C"
+							0						
+				testPrimitiveD:
+					parse: (token) ->
+						if token is "Test Literal D"
+							null						
+				testPrimitiveE:
+					parse: (token) ->
+						if token is "Test Literal E"
+							""										
+				testPrimitiveF:
+					parse: (token) ->
+						if token is "Test Literal F"
+							NaN						
 				
 		funct =
 			declarations:
@@ -26,30 +44,6 @@ describe "getValue", ->
 			expect(_funct).toBe funct
 			return "Test Compiled Expression"			
 
-		spyOn(tokenized.primitives, "testPrimitiveA").and.callFake (token) ->
-			if token is "Test Literal A"
-				false
-			
-		spyOn(tokenized.primitives, "testPrimitiveB").and.callFake (token) ->
-			if token is "Test Literal B"
-				"Test Primitive"
-		
-		spyOn(tokenized.primitives, "testPrimitiveC").and.callFake (token) ->
-			if token is "Test Literal C"
-				0
-				
-		spyOn(tokenized.primitives, "testPrimitiveD").and.callFake (token) ->
-			if token is "Test Literal D"
-				null
-				
-		spyOn(tokenized.primitives, "testPrimitiveE").and.callFake (token) ->
-			if token is "Test Literal E"
-				""				
-				
-		spyOn(tokenized.primitives, "testPrimitiveF").and.callFake (token) ->
-			if token is "Test Literal F"
-				NaN
-						
 	it "returns a value object when a primitive literal returning truthy is given", ->
 		expect getValue tokenized, "Test Input", "Test Literal B", funct
 			.toEqual
