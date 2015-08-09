@@ -27,6 +27,6 @@ module.exports = (tokenized, a, b) ->
 	if a.native
 		if not b.native then return
 		if a.native.function isnt b.native.function then return
-		return a.native.function.inputsEqual a.native.input, b.native.input
+		return a.native.function.inputsEqual tokenized, a.native.input, b.native.input
 	
 module.exports.valuesEquivalent = module.exports

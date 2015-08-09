@@ -150,7 +150,8 @@ describe "valuesEquivalent", ->
 				native:
 					input: "Test Function Input A"
 					function:
-						inputsEqual: (a, b) ->
+						inputsEqual: (_tokenized, a, b) ->
+							expect(_tokenized).toBe tokenized
 							if a is "Test Function Input A" and b is "Test Function Input B" then return true
 		it "returns falsy given a properties object", ->
 			b = 
