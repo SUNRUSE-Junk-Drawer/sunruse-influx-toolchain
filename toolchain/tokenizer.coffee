@@ -110,12 +110,12 @@ module.exports = (files) ->
 									from: whitespaces
 									to: whitespaces + line.trim().length
 					
-					haveDeleted = false
+					deletedTo = null
 					while indentations.length and whitespaces <= indentations[indentations.length - 1].whitespaces
+						deletedTo = indentations[indentations.length - 1].whitespaces
 						indentations.length-- 
-						haveDeleted = true
 						
-					if haveDeleted and indentations.length and indentations[indentations.length - 1].whitespaces < whitespaces
+					if deletedTo isnt null and deletedTo isnt whitespaces and indentations.length and indentations[indentations.length - 1].whitespaces < whitespaces
 						throw
 							reason: "unindentedToUnexpectedLevel"
 							line:

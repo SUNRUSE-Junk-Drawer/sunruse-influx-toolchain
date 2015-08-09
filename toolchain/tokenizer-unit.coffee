@@ -43,6 +43,17 @@ describe "tokenizer", ->
 								tempSubPropB tempSubValCCB tempFuncCCBA tempFuncCCBB
 						output tempVarC
 				"""	
+			test_file_d:
+				"""
+					withMultipleBasicPropertiesNested
+						output
+							a
+								a1 2
+								a2 4
+							b
+								b1 6
+								b2 8
+				"""
 	
 	it "generates a set of functions from the given data", ->
 		result = tokenizer input
@@ -434,6 +445,103 @@ describe "tokenizer", ->
 									from: 8
 									to: 16
 						]
+			,
+				name: "withMultipleBasicPropertiesNested"
+				line: 
+					filename: "test_file_d"
+					line: 0
+					columns:
+						from: 0
+						to: 33
+				declarations:
+					output:
+						line:
+							filename: "test_file_d"
+							line: 1
+							columns:
+								from: 1
+								to: 7
+						properties:
+							a:
+								line:
+									filename: "test_file_d"
+									line: 2
+									columns:
+										from: 2
+										to: 3
+								properties:
+									a1:
+										line:
+											filename: "test_file_d"
+											line: 3
+											columns:
+												from: 3
+												to: 5
+										chain: [
+											token: "2"
+											line:
+												filename: "test_file_d"
+												line: 3
+												columns:
+													from: 6
+													to: 7
+										]							
+									a2:
+										line:
+											filename: "test_file_d"
+											line: 4
+											columns:
+												from: 3
+												to: 5
+										chain: [
+											token: "4"
+											line:
+												filename: "test_file_d"
+												line: 4
+												columns:
+													from: 6
+													to: 7
+										]							
+							b:
+								line:
+									filename: "test_file_d"
+									line: 5
+									columns:
+										from: 2
+										to: 3
+								properties:
+									b1:
+										line:
+											filename: "test_file_d"
+											line: 6
+											columns:
+												from: 3
+												to: 5
+										chain: [
+											token: "6"
+											line:
+												filename: "test_file_d"
+												line: 6
+												columns:
+													from: 6
+													to: 7
+										]							
+									b2:
+										line:
+											filename: "test_file_d"
+											line: 7
+											columns:
+												from: 3
+												to: 5
+										chain: [
+											token: "8"
+											line:
+												filename: "test_file_d"
+												line: 7
+												columns:
+													from: 6
+													to: 7
+										]						
 		]	
 		
 		expect(result).toHaveSameItems expected		
