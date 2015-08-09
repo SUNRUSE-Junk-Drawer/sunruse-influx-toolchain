@@ -50,10 +50,15 @@
 #			parse: A function taking a string which may or may not be a 
 #				primitive literal as its argument.  When it is not, return 
 #				undefined.  When it is, return the value.
+#			equal: Takes two values previously returned by parse.  Return
+#				truthy when they refer to the same value, else, falsy.
 # 	nativeFunctions: Initially empty array of objects describing functions.
 #		name: String identifying the function.
 #		compile: Takes a value object and returns a new value object describing 
 #			the output if compilation succeeded, else, falsy.
+#		inputsEqual: Takes two value objects returned by separate calls to
+#			compile.  Return truthy when they should compile to the same native
+#			call, and falsy when they should not.
 #		output: String identifying the primitive type returned. 
 module.exports = (files) ->
 	output = []
