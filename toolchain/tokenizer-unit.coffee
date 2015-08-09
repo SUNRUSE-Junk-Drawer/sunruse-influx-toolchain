@@ -16,9 +16,11 @@ describe "tokenizer", ->
 							
 							testPropertyB testValueB testFunctionBA testFunctionBB
 							testPropertyC
+								# Comments are ignored.
 								testNestedPropertyA testValueCA
 								 	
 								testNestedPropertyB testValueCB testFunctionCBA testFunctionCBB
+									# Indented comments are ignored.
 								testNestedPropertyC
 									testDoubleNestedValueA testDoubleNestedValueCCA
 
@@ -26,6 +28,7 @@ describe "tokenizer", ->
 				"""								 
 			test_file_b:
 				"""
+					# This line will be ignored.
 					withTemporaryVariables   					
 						tempVarA tempValA
 
@@ -33,6 +36,7 @@ describe "tokenizer", ->
 						tempVarC
 							tempPropCA tempValCA
 							tempPropCB tempValCB tempFuncCBA tempFuncCBB
+					# Unindented comments are ignored.
 							tempPropCC
 								tempSubPropA tempSubValCCA
 								
@@ -144,7 +148,7 @@ describe "tokenizer", ->
 									testNestedPropertyA:
 										line:
 											filename: "test_file_a"
-											line: 9
+											line: 10
 											columns: 
 												from: 3
 												to: 22
@@ -152,7 +156,7 @@ describe "tokenizer", ->
 											token: "testValueCA"
 											line:
 												filename: "test_file_a"
-												line: 9
+												line: 10
 												columns:
 													from: 23
 													to: 34
@@ -160,7 +164,7 @@ describe "tokenizer", ->
 									testNestedPropertyB:
 										line:
 											filename: "test_file_a"
-											line: 11
+											line: 12
 											columns: 
 												from: 3
 												to: 22
@@ -168,7 +172,7 @@ describe "tokenizer", ->
 												token: "testValueCB"
 												line:
 													filename: "test_file_a"
-													line: 11
+													line: 12
 													columns:
 														from: 23
 														to: 34
@@ -176,7 +180,7 @@ describe "tokenizer", ->
 												token: "testFunctionCBA"
 												line:
 													filename: "test_file_a"
-													line: 11
+													line: 12
 													columns:
 														from: 35
 														to: 50											
@@ -184,7 +188,7 @@ describe "tokenizer", ->
 												token: "testFunctionCBB"
 												line:
 													filename: "test_file_a"
-													line: 11
+													line: 12
 													columns:
 														from: 51
 														to: 66											
@@ -192,7 +196,7 @@ describe "tokenizer", ->
 									testNestedPropertyC:
 										line:
 											filename: "test_file_a"
-											line: 12
+											line: 14
 											columns: 
 												from: 3
 												to: 22
@@ -200,7 +204,7 @@ describe "tokenizer", ->
 											testDoubleNestedValueA:
 												line:
 													filename: "test_file_a"
-													line: 13
+													line: 15
 													columns:
 														from: 4
 														to: 26
@@ -208,7 +212,7 @@ describe "tokenizer", ->
 													token: "testDoubleNestedValueCCA"
 													line:
 														filename: "test_file_a"
-														line: 13
+														line: 15
 														columns: 
 															from: 27
 															to: 51
@@ -216,7 +220,7 @@ describe "tokenizer", ->
 											testDoubleNestedValueB:
 												line:
 													filename: "test_file_a"
-													line: 15
+													line: 17
 													columns:
 														from: 4
 														to: 26
@@ -224,7 +228,7 @@ describe "tokenizer", ->
 														token: "testDoubleNestedValueCCB"
 														line:
 															filename: "test_file_a"
-															line: 15
+															line: 17
 															columns: 
 																from: 27
 																to: 51
@@ -232,7 +236,7 @@ describe "tokenizer", ->
 														token: "testFunctionCCBA"
 														line:
 															filename: "test_file_a"
-															line: 15
+															line: 17
 															columns: 
 																from: 52
 																to: 68
@@ -240,7 +244,7 @@ describe "tokenizer", ->
 														token: "testFunctionCCBB"
 														line:
 															filename: "test_file_a"
-															line: 15
+															line: 17
 															columns: 
 																from: 69
 																to: 85													
@@ -249,7 +253,7 @@ describe "tokenizer", ->
 				name: "withTemporaryVariables"
 				line:
 					filename: "test_file_b"
-					line: 0
+					line: 1
 					columns:
 						from: 0
 						to: 22
@@ -257,7 +261,7 @@ describe "tokenizer", ->
 					tempVarA:
 						line:
 							filename: "test_file_b"
-							line: 1
+							line: 2
 							columns:
 								from: 1
 								to: 9
@@ -265,7 +269,7 @@ describe "tokenizer", ->
 							token: "tempValA"
 							line:
 								filename: "test_file_b"
-								line: 1
+								line: 2
 								columns:
 									from: 10
 									to: 18
@@ -273,7 +277,7 @@ describe "tokenizer", ->
 					tempVarB:
 						line:
 							filename: "test_file_b"
-							line: 3
+							line: 4
 							columns:
 								from: 1
 								to: 9
@@ -281,7 +285,7 @@ describe "tokenizer", ->
 								token: "tempValB"
 								line:
 									filename: "test_file_b"
-									line: 3
+									line: 4
 									columns:
 										from: 10
 										to: 18
@@ -289,7 +293,7 @@ describe "tokenizer", ->
 								token: "tempFuncBA"
 								line:
 									filename: "test_file_b"
-									line: 3
+									line: 4
 									columns:
 										from: 19
 										to: 29
@@ -297,7 +301,7 @@ describe "tokenizer", ->
 								token: "tempFuncBB"
 								line:
 									filename: "test_file_b"
-									line: 3
+									line: 4
 									columns:
 										from: 30
 										to: 40							
@@ -305,7 +309,7 @@ describe "tokenizer", ->
 					tempVarC:
 						line:
 							filename: "test_file_b"
-							line: 4
+							line: 5
 							columns:
 								from: 1
 								to: 9
@@ -313,7 +317,7 @@ describe "tokenizer", ->
 							tempPropCA:
 								line:
 									filename: "test_file_b"
-									line: 5
+									line: 6
 									columns:
 										from: 2
 										to: 12
@@ -321,7 +325,7 @@ describe "tokenizer", ->
 									token: "tempValCA"
 									line:
 										filename: "test_file_b"
-										line: 5
+										line: 6
 										columns:
 											from: 13
 											to: 22
@@ -329,7 +333,7 @@ describe "tokenizer", ->
 							tempPropCB:
 								line:
 									filename: "test_file_b"
-									line: 6
+									line: 7
 									columns:
 										from: 2
 										to: 12
@@ -337,7 +341,7 @@ describe "tokenizer", ->
 										token: "tempValCB"
 										line:
 											filename: "test_file_b"
-											line: 6
+											line: 7
 											columns:
 												from: 13
 												to: 22
@@ -345,7 +349,7 @@ describe "tokenizer", ->
 										token: "tempFuncCBA"
 										line:
 											filename: "test_file_b"
-											line: 6
+											line: 7
 											columns:
 												from: 23
 												to: 34									
@@ -353,7 +357,7 @@ describe "tokenizer", ->
 										token: "tempFuncCBB"
 										line:
 											filename: "test_file_b"
-											line: 6
+											line: 7
 											columns:
 												from: 35
 												to: 46																						
@@ -361,7 +365,7 @@ describe "tokenizer", ->
 							tempPropCC:
 								line:
 									filename: "test_file_b"
-									line: 7
+									line: 9
 									columns:
 										from: 2
 										to: 12								
@@ -369,7 +373,7 @@ describe "tokenizer", ->
 									tempSubPropA:
 										line:
 											filename: "test_file_b"
-											line: 8
+											line: 10
 											columns:
 												from: 3
 												to: 15
@@ -377,7 +381,7 @@ describe "tokenizer", ->
 											token: "tempSubValCCA"
 											line:
 												filename: "test_file_b"
-												line: 8
+												line: 10
 												columns:
 													from: 16
 													to: 29
@@ -385,7 +389,7 @@ describe "tokenizer", ->
 									tempSubPropB:
 										line:
 											filename: "test_file_b"
-											line: 10
+											line: 12
 											columns:
 												from: 3
 												to: 15
@@ -393,7 +397,7 @@ describe "tokenizer", ->
 												token: "tempSubValCCB"
 												line:
 													filename: "test_file_b"
-													line: 10
+													line: 12
 													columns:
 														from: 16
 														to: 29
@@ -401,7 +405,7 @@ describe "tokenizer", ->
 												token: "tempFuncCCBA"
 												line:
 													filename: "test_file_b"
-													line: 10
+													line: 12
 													columns:
 														from: 30
 														to: 42
@@ -409,7 +413,7 @@ describe "tokenizer", ->
 												token: "tempFuncCCBB"
 												line:
 													filename: "test_file_b"
-													line: 10
+													line: 12
 													columns:
 														from: 43
 														to: 55																																				
@@ -417,7 +421,7 @@ describe "tokenizer", ->
 					output:
 						line:
 							filename: "test_file_b"
-							line: 11
+							line: 13
 							columns:
 								from: 1
 								to: 7
@@ -425,12 +429,12 @@ describe "tokenizer", ->
 							token: "tempVarC"
 							line:
 								filename: "test_file_b"
-								line: 11
+								line: 13
 								columns:
 									from: 8
 									to: 16
 						]
-		]
+		]	
 		
 		expect(result).toHaveSameItems expected		
 		

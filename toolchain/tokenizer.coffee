@@ -63,6 +63,7 @@ module.exports = (files) ->
 		declaringFunction = null
 		lastPropertyChainWhitespaces = null
 		for line, lineNumber in lines
+			if line.trim()[0] is "#" then continue
 			whitespaces = line.search /\S/
 			switch whitespaces
 				when -1 then ;
