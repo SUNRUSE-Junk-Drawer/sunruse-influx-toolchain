@@ -56,10 +56,12 @@
 #		name: String identifying the function.
 #		compile: Takes a value object and returns a new value object describing 
 #			the output if compilation succeeded, else, falsy.
-#		inputsEqual: Takes two value objects returned by separate calls to
-#			compile.  Return truthy when they should compile to the same native
-#			call, and falsy when they should not.
+#		inputsEqual: Takes the tokenized types and two value objects returned 
+#			by separate calls to compile.  Return truthy when they should 
+#			compile to the same native call, and falsy when they should not.
 #		output: String identifying the primitive type returned. 
+#	compile: Takes the tokenized types, an input value object, the output 
+#		value object and returns generated native code.
 module.exports = (files) ->
 	output = []
 	for filename of files
