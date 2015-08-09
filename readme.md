@@ -122,3 +122,16 @@ The following functions are natively implemented by default:
 * and a bool, b bool -> bool
 * xor a bool, b bool -> bool
 * switch a, b, on bool -> anything
+* sqrt float -> float
+* pow base float, exp float -> float
+* sin float -> float
+* cos float -> float
+* tan float -> float
+* asin float -> float
+* acos float -> float
+* atan float -> float
+* atan2 a float, b float -> float
+* floor float -> float
+* ceil float -> float
+* toFloat int -> float
+* toInt float -> int 
