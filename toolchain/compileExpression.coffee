@@ -8,10 +8,10 @@
 #	When the expression compiles, the value object generated is returned.
 module.exports = (tokenized, input, expression, funct) ->
 	if expression.chain
-		value = module.exports.getValue tokenized, input, expression.chain[0], funct
+		value = module.exports.getValue tokenized, input, expression.chain[0].token, funct
 		for func in [1 ... expression.chain.length]
 			if not value then return null
-			value = module.exports.findFunction tokenized, value, expression.chain[func]
+			value = module.exports.findFunction tokenized, value, expression.chain[func].token
 		value
 	else
 		output =

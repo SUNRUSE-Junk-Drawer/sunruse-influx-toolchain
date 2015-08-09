@@ -44,7 +44,13 @@ describe "compileExpression", ->
 			
 	describe "given a chain", ->
 		beforeEach ->
-			expression.chain = ["Test Resolvable Value", "Test Resolvable Function A", "Test Resolvable Function B"]
+			expression.chain = [
+					token: "Test Resolvable Value",
+				, 
+					token: "Test Resolvable Function A",
+				, 
+					token: "Test Resolvable Function B"
+			]
 		
 		it "returns falsy when the value cannot be resolved", ->
 			expression.chain[0] = "Test Unresolvable Value"
