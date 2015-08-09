@@ -5,6 +5,7 @@
 #	native: When truthy, the value is the result of executing a native
 #		function.  An object containing:
 #			input: The input to the native function.
+#			function: A reference to the native function to be executed.
 #		Other data may be present; used internally by the current platform's 
 #		compiler.
 #	primitive: When truthy, the value is a primitive constant.  An object
