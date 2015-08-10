@@ -16,7 +16,7 @@ module.exports = (grunt) ->
             options:
                 specNameSuffix: ".js"
             unit: 
-                specs: ["build/**/*.js", "**/*-unit.js"]
+                specs: ["**/*-unit.js"]
         clean:
             build: "build"
             deploy: "deploy"
@@ -32,12 +32,12 @@ module.exports = (grunt) ->
             config:
                 files: [
                         expand: true
-                        src: ["toolchain/**/*.coffee", "platforms/**/*.coffee"]
+                        src: ["toolchain/**/*.coffee", "platforms/**/*.coffee", "cli/**/*.coffee"]
                         dest: "build"
                         ext: ".js"
                 ]
         watch:
             options:
                 atBegin: true
-            files: ["gruntfile.coffee", "toolchain/**/*", "platforms/**/*"]
+            files: ["gruntfile.coffee", "toolchain/**/*", "platforms/**/*", "cli/**/*"]
             tasks: ["build", "test", "deploy"]
