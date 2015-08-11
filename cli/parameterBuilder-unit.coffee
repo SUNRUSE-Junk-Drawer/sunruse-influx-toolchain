@@ -36,6 +36,12 @@ describe "cli", ->
 					score: 0
 					properties: {}
 					
+		it "returns an empty properties object when falsy parameters are given", ->
+			expect parameterBuilder tokenized, null
+				.toEqual 
+					score: 0
+					properties: {}
+					
 		it "returns a primitive parameter when only a type is given", ->
 			expect parameterBuilder tokenized, ["testPrimitiveC"]
 				.toEqual 

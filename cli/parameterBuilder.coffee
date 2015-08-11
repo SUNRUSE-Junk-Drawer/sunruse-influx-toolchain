@@ -25,57 +25,58 @@
 module.exports = (tokenized, parameters) ->
 	input = {}
 	
-	for parameter in parameters
-
-		tokens = parameter.split "."	
-		found = input
+	if parameters
+		for parameter in parameters
 	
-		while tokens.length > 1
-			if found.parameter or found.primitive
+			tokens = parameter.split "."	
+			found = input
+		
+			while tokens.length > 1
+				if found.parameter or found.primitive
+					chain = parameter.split "."
+					chain.pop() for [0 ... tokens.length]
+					throw 
+						reason: "parameterDefinedMultipleTimes"
+						chain: chain
+						parameter: parameter
+					
+				if not found.properties
+					found.properties = {}
+				if not found.properties[tokens[0]]
+					found.properties[tokens[0]] = {}
+					
+				found = found.properties[tokens[0]]
+					
+				tokens.shift()
+		
+			if found.properties or found.parameter or found.primitive
 				chain = parameter.split "."
-				chain.pop() for [0 ... tokens.length]
+				chain.pop()
 				throw 
 					reason: "parameterDefinedMultipleTimes"
 					chain: chain
 					parameter: parameter
-				
-			if not found.properties
-				found.properties = {}
-			if not found.properties[tokens[0]]
-				found.properties[tokens[0]] = {}
-				
-			found = found.properties[tokens[0]]
-				
-			tokens.shift()
-	
-		if found.properties or found.parameter or found.primitive
-			chain = parameter.split "."
-			chain.pop()
-			throw 
-				reason: "parameterDefinedMultipleTimes"
-				chain: chain
-				parameter: parameter
-	
-		for primitiveName of tokenized.primitives
-			parsed = tokenized.primitives[primitiveName].parse tokens[0]
-			if parsed isnt undefined
-				found.primitive =
-					type: primitiveName
-					value: parsed
-				break
-	
-		if found.primitive then continue
-	
-		if not tokenized.primitives[tokens[0]]
-			chain = parameter.split "."
-			chain.pop() for [0 ... tokens.length]		
-			throw
-				reason: "primitiveTypeOrLiteralUnrecognized"
+		
+			for primitiveName of tokenized.primitives
+				parsed = tokenized.primitives[primitiveName].parse tokens[0]
+				if parsed isnt undefined
+					found.primitive =
+						type: primitiveName
+						value: parsed
+					break
+		
+			if found.primitive then continue
+		
+			if not tokenized.primitives[tokens[0]]
+				chain = parameter.split "."
+				chain.pop() for [0 ... tokens.length]		
+				throw
+					reason: "primitiveTypeOrLiteralUnrecognized"
+					type: tokens[0]
+					chain: chain
+		
+			found.parameter =
 				type: tokens[0]
-				chain: chain
-	
-		found.parameter =
-			type: tokens[0]
 	
 	if not (input.properties or input.parameter or input.primitive)
 		input = 
