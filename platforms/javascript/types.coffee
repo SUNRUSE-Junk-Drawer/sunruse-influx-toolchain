@@ -1,7 +1,7 @@
 module.exports =
 	nativeFunctions:
-		require "./int/arithmetic"
-			.concat require "./int/comparisons"
+		(require "./int/arithmetic")()
+			.concat (require "./int/comparisons")()
 			.concat require "./float/arithmetic"
 			.concat require "./float/comparisons"
 			.concat require "./bool/operators" 

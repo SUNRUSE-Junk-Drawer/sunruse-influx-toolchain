@@ -1,96 +1,12 @@
-valueIsPrimitive = require "./../../../toolchain/valueIsPrimitive"
+module.exports = ->
+	[
+		module.exports.makeUnary "negate", "int", "int", ((value) -> -value), (getCode, value) -> "-(" + (getCode value) + ")"
+		module.exports.makeUnorderedBinary "add", "int", "int", ((a, b) -> a + b), (getCode, value) -> "(" + (getCode value.properties.a) + ") + (" + (getCode value.properties.b) + ")"
+		module.exports.makeOrderedBinary "subtract", "int", "int", ((a, b) -> a - b), (getCode, value) -> "(" + (getCode value.properties.a) + ") - (" + (getCode value.properties.b) + ")"
+		module.exports.makeUnorderedBinary "multiply", "int", "int", ((a, b) -> a * b), (getCode, value) -> "(" + (getCode value.properties.a) + ") * (" + (getCode value.properties.b) + ")"
+		module.exports.makeOrderedBinary "divide", "int", "int", ((a, b) -> Math.round(a / b)), (getCode, value) -> "(" + (getCode value.properties.a) + ") / (" + (getCode value.properties.b) + ")"
+	]
 
-module.exports = [
-		intAdd =
-			name: "add"
-			compile: (value) -> 
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "int" then return null
-				if not valueIsPrimitive value.properties.b, "int" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "int"
-							value: value.properties.a.primitive.value + value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: intAdd
-			output: "int"
-	,
-		intSubtract =
-			name: "subtract"
-			compile: (value) ->
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "int" then return null
-				if not valueIsPrimitive value.properties.b, "int" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "int"
-							value: value.properties.a.primitive.value - value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: intSubtract
-			output: "int"
-	,
-		intMultiply =
-			name: "multiply"
-			compile: (value) ->
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "int" then return null
-				if not valueIsPrimitive value.properties.b, "int" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "int"
-							value: value.properties.a.primitive.value * value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: intMultiply
-			output: "int"				
-	,
-		intDivide =
-			name: "divide"
-			compile: (value) ->
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "int" then return null
-				if not valueIsPrimitive value.properties.b, "int" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "int"
-							value: Math.floor(value.properties.a.primitive.value / value.properties.b.primitive.value)
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: intDivide
-			output: "int"				
-	,
-		intNegate =
-			name: "negate"
-			compile: (value) ->
-				if not valueIsPrimitive value, "int" then return null
-				if value.primitive
-					return unused =
-						score: value.score + 1
-						primitive:
-							type: "int"
-							value: -value.primitive.value				
-				return unused =
-					score: value.score + 1
-					native:
-						input: value
-						function: intNegate
-			output: "int"	
-]
+module.exports.makeUnary = require "./../../helpers/makeUnary"
+module.exports.makeOrderedBinary = require "./../../helpers/makeOrderedBinary"
+module.exports.makeUnorderedBinary = require "./../../helpers/makeUnorderedBinary"
