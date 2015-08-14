@@ -69,7 +69,7 @@ describe "platforms", ->
 									b: "Test Input B"	
 							expect unorderedBinaries.add.args[4] getCode, input
 								.toEqual "(Test Code A) + (Test Code B)"
-					it "subtract", ->
+					describe "subtract", ->
 						it "is returned", ->
 							subtract = (func for func in functions when func.name is "subtract")
 							expect(subtract.length).toEqual 1
@@ -90,9 +90,9 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.subtract.generateCode getCode, input
+							expect orderedBinaries.subtract.args[4] getCode, input
 								.toEqual "(Test Code A) - (Test Code B)"						
-					it "multiply", ->
+					describe "multiply", ->
 						it "is returned", ->
 							multiply = (func for func in functions when func.name is "add")
 							expect(multiply.length).toEqual 1
@@ -115,7 +115,7 @@ describe "platforms", ->
 									b: "Test Input B"	
 							expect unorderedBinaries.multiply.args[4] getCode, input
 								.toEqual "(Test Code A) * (Test Code B)"
-					it "divide", ->
+					describe "divide", ->
 						it "is returned", ->
 							divide = (func for func in functions when func.name is "divide")
 							expect(divide.length).toEqual 1
@@ -136,9 +136,9 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect divide[0].generateCode getCode, input
+							expect orderedBinaries.divide.args[4] getCode, input
 								.toEqual "(Test Code A) / (Test Code B)"												
-					it "negate", ->
+					describe "negate", ->
 						it "is returned", ->
 							negate = (func for func in functions when func.name is "negate")
 							expect(negate.length).toEqual 1
@@ -153,5 +153,5 @@ describe "platforms", ->
 							getCode = (value) ->
 								expect(value).toEqual "Test Input"
 								"Test Code"
-							expect negate[0].generateCode getCode, "Test Input"
+							expect unaries.negate.args[4] getCode, "Test Input"
 								.toEqual "-(Test Code)"																		
