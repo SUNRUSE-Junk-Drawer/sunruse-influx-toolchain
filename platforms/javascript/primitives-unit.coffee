@@ -35,6 +35,16 @@ describe "platforms", ->
 					it "returns falsy given a negative float", ->
 						expect platform.primitives.int.parse "-24.65"
 							.toBeUndefined()												
+				describe "equal", ->
+					it "returns falsy when a is less than b", ->
+						expect platform.primitives.int.equal 30, 31
+							.toBeFalsy()
+					it "returns truthy when a is equal to b", ->
+						expect platform.primitives.int.equal 31, 31
+							.toBeTruthy()
+					it "returns falsy when a is greater than b", ->
+						expect platform.primitives.int.equal 32, 31
+							.toBeFalsy()							
 			describe "float", ->
 				describe "parse", ->
 					it "returns undefined given no digits", ->
@@ -67,6 +77,16 @@ describe "platforms", ->
 					it "returns a float given a negative float", ->
 						expect platform.primitives.float.parse "-24.65"
 							.toEqual -24.65																			
+				describe "equal", ->
+					it "returns falsy when a is less than b", ->
+						expect platform.primitives.float.equal 33.4, 33.7
+							.toBeFalsy()
+					it "returns truthy when a is equal to b", ->
+						expect platform.primitives.float.equal 33.5, 33.5
+							.toBeTruthy()
+					it "returns falsy when a is greater than b", ->
+						expect platform.primitives.float.equal 33.7, 33.4
+							.toBeFalsy()						
 			describe "bool", ->
 				describe "parse", ->
 					it "returns undefined given unexpected input", ->
@@ -78,3 +98,16 @@ describe "platforms", ->
 					it "returns false given 'false'", ->
 						expect platform.primitives.bool.parse "false"
 							.toBe(false)														
+				describe "equal", ->
+					it "returns truthy when a is false and b is false", ->
+						expect platform.primitives.bool.equal false, false
+							.toBeTruthy()
+					it "returns truthy when a is true and b is false", ->
+						expect platform.primitives.bool.equal true, false
+							.toBeFalsy()
+					it "returns truthy when a is false and b is true", ->
+						expect platform.primitives.bool.equal false, true
+							.toBeFalsy()
+					it "returns truthy when a is true and b is true", ->
+						expect platform.primitives.bool.equal true, true
+							.toBeTruthy()																					
