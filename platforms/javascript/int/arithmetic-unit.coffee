@@ -131,7 +131,7 @@ describe "platforms", ->
 									a: "Test Input A"
 									b: "Test Input B"	
 							expect orderedBinaries.divide.args[4] "Test Tokenized", "Test Cache", input
-								.toEqual "(Test Code A) / (Test Code B)"												
+								.toEqual "Math.round((Test Code A) / (Test Code B))"												
 					describe "negate", ->
 						it "is returned", ->
 							negate = (func for func in functions when func.name is "negate")
