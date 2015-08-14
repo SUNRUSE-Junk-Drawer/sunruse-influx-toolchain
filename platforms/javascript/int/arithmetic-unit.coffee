@@ -11,13 +11,16 @@ describe "platforms", ->
 					it "makeOrderedBinary", ->
 						expect(arithmetic.makeOrderedBinary).toBe require "./../../helpers/makeOrderedBinary"						
 					it "makeUnorderedBinary", ->
-						expect(arithmetic.makeUnorderedBinary).toBe require "./../../helpers/makeUnorderedBinary"						
+						expect(arithmetic.makeUnorderedBinary).toBe require "./../../helpers/makeUnorderedBinary"
+					it "codeCache", ->
+						expect(arithmetic.codeCache).toBe require "./../codeCache"
 				describe "defines", ->
-					functions = unaries = unorderedBinaries = orderedBinaries = undefined
+					codeCache = functions = unaries = unorderedBinaries = orderedBinaries = undefined
 					beforeEach ->
 						makeUnary = arithmetic.makeUnary
 						makeOrderedBinary = arithmetic.makeOrderedBinary
 						makeUnorderedBinary = arithmetic.makeUnorderedBinary
+						codeCache = arithmetic.codeCache
 						arithmetic.makeUnary = jasmine.createSpy()
 						arithmetic.makeOrderedBinary = jasmine.createSpy()
 						arithmetic.makeUnorderedBinary = jasmine.createSpy()
@@ -46,6 +49,17 @@ describe "platforms", ->
 						arithmetic.makeUnary = makeUnary
 						arithmetic.makeOrderedBinary = makeOrderedBinary
 						arithmetic.makeUnorderedBinary = makeUnorderedBinary						
+						
+						arithmetic.codeCache = (tokenized, cache, value) ->
+							expect(tokenized).toEqual "Test Tokenized"
+							expect(cache).toEqual "Test Cache"
+							switch value
+								when "Test Input" then return "Test Code"
+								when "Test Input A" then return "Test Code A"
+								when "Test Input B" then return "Test Code B"
+								else expect(false).toBeTruthy()
+					afterEach ->
+						arithmetic.codeCache = codeCache
 					describe "add", ->
 						it "is returned", ->
 							add = (func for func in functions when func.name is "add")
@@ -58,16 +72,11 @@ describe "platforms", ->
 							expect(unorderedBinaries.add.args[3] 7, 8).toEqual 15 
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.add.args[4] getCode, input
+							expect unorderedBinaries.add.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) + (Test Code B)"
 					describe "subtract", ->
 						it "is returned", ->
@@ -81,16 +90,11 @@ describe "platforms", ->
 							expect(orderedBinaries.subtract.args[3] 7, 8).toEqual -1 						
 						
 						it "supports native code generation", ->
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.subtract.args[4] getCode, input
+							expect orderedBinaries.subtract.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) - (Test Code B)"						
 					describe "multiply", ->
 						it "is returned", ->
@@ -104,16 +108,11 @@ describe "platforms", ->
 							expect(unorderedBinaries.multiply.args[3] 7, 8).toEqual 56 
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.multiply.args[4] getCode, input
+							expect unorderedBinaries.multiply.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) * (Test Code B)"
 					describe "divide", ->
 						it "is returned", ->
@@ -127,16 +126,11 @@ describe "platforms", ->
 							expect(orderedBinaries.divide.args[3] 65, 3).toEqual 22	
 						
 						it "supports native code generation", ->
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.divide.args[4] getCode, input
+							expect orderedBinaries.divide.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) / (Test Code B)"												
 					describe "negate", ->
 						it "is returned", ->
@@ -150,8 +144,5 @@ describe "platforms", ->
 							expect(unaries.negate.args[3] 65).toEqual -65
 						
 						it "supports native code generation", ->
-							getCode = (value) ->
-								expect(value).toEqual "Test Input"
-								"Test Code"
-							expect unaries.negate.args[4] getCode, "Test Input"
+							expect unaries.negate.args[4] "Test Tokenized", "Test Cache", "Test Input"
 								.toEqual "-(Test Code)"																		

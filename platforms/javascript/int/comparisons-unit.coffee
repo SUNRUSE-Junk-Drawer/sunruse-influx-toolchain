@@ -11,12 +11,13 @@ describe "platforms", ->
 					it "makeUnorderedBinary", ->
 						expect(comparisons.makeUnorderedBinary).toBe require "./../../helpers/makeUnorderedBinary"						
 				describe "defines", ->
-					functions = unorderedBinaries = orderedBinaries = undefined
+					codeCache = functions = unorderedBinaries = orderedBinaries = undefined
 					beforeEach ->
 						makeOrderedBinary = comparisons.makeOrderedBinary
 						makeUnorderedBinary = comparisons.makeUnorderedBinary
 						comparisons.makeOrderedBinary = jasmine.createSpy()
 						comparisons.makeUnorderedBinary = jasmine.createSpy()
+						codeCache = comparisons.codeCache
 						orderedBinaries = {}
 						comparisons.makeOrderedBinary.and.callFake (name) ->
 							toReturn = makeOrderedBinary.apply this, arguments
@@ -33,7 +34,17 @@ describe "platforms", ->
 							return toReturn							
 						functions = comparisons()
 						comparisons.makeOrderedBinary = makeOrderedBinary
-						comparisons.makeUnorderedBinary = makeUnorderedBinary						
+						comparisons.makeUnorderedBinary = makeUnorderedBinary		
+						comparisons.codeCache = (tokenized, cache, value) ->
+							expect(tokenized).toEqual "Test Tokenized"
+							expect(cache).toEqual "Test Cache"
+							switch value
+								when "Test Input" then return "Test Code"
+								when "Test Input A" then return "Test Code A"
+								when "Test Input B" then return "Test Code B"
+								else expect(false).toBeTruthy()
+					afterEach ->
+						comparisons.codeCache = codeCache				
 					describe "equal", ->
 						it "is returned", ->
 							equal = (func for func in functions when func.name is "equal")
@@ -51,16 +62,11 @@ describe "platforms", ->
 								expect(unorderedBinaries.equal.args[3] 9, 8).toBeFalsy()															
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.equal.args[4] getCode, input
+							expect unorderedBinaries.equal.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) == (Test Code B)"
 								
 					describe "greater", ->
@@ -80,16 +86,11 @@ describe "platforms", ->
 								expect(orderedBinaries.greater.args[3] 9, 8).toBeTruthy()															
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.greater.args[4] getCode, input
+							expect orderedBinaries.greater.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) > (Test Code B)"								
 								
 					describe "less", ->
@@ -109,16 +110,11 @@ describe "platforms", ->
 								expect(orderedBinaries.less.args[3] 9, 8).toBeFalsy()															
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.less.args[4] getCode, input
+							expect orderedBinaries.less.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) < (Test Code B)"								
 								
 					describe "greaterEqual", ->
@@ -138,16 +134,11 @@ describe "platforms", ->
 								expect(orderedBinaries.greaterEqual.args[3] 9, 8).toBeTruthy()															
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.greaterEqual.args[4] getCode, input
+							expect orderedBinaries.greaterEqual.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) >= (Test Code B)"								
 								
 					describe "lessEqual", ->
@@ -167,14 +158,9 @@ describe "platforms", ->
 								expect(orderedBinaries.lessEqual.args[3] 9, 8).toBeFalsy()															
 							
 						it "supports native code generation", ->				
-							getCode = (value) ->
-								switch value
-									when "Test Input A" then "Test Code A"
-									when "Test Input B" then "Test Code B"
-									else expect(false).toBeTruthy()
 							input = 
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.lessEqual.args[4] getCode, input
+							expect orderedBinaries.lessEqual.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) <= (Test Code B)"																
