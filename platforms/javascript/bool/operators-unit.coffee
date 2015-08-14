@@ -1,559 +1,160 @@
-platform = require "./../types"
-findFunction = require "./../../../toolchain/findFunction"
-
 describe "platforms", ->
 	describe "javascript", ->
-		describe "primitives", ->
-			describe "bool", ->
-				describe "not", ->
-					it "collapses constants for false", ->
-						input = 
-							score: 7
-							primitive:
-								type: "bool"
-								value: false										
-						expect findFunction platform, input, "not"
-							.toEqual
-								score: 8
-								primitive:
-									type: "bool"
-									value: true
-					it "collapses constants for true", ->
-						input = 
-							score: 7
-							primitive:
-								type: "bool"
-								value: true										
-						expect findFunction platform, input, "not"
-							.toEqual
-								score: 8
-								primitive:
-									type: "bool"
-									value: false									
-					it "does not collapse when the input is not constant", ->
-						input = 
-							score: 7
-							parameter:
-								type: "bool"
-						expect findFunction platform, input, "not"
-							.toEqual
-								score: 8
-								native:
-									function: 
-										name: "not"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										score: 7
-										parameter:
-											type: "bool"					
-				describe "and", ->
-					it "collapses constants for false, false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: false										
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants for true, true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: true										
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "collapses constants for true, false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: false										
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants for false, true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: true										
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "and"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "bool"
-													value: true
-											b:
-												score: 7
-												parameter:
-													type: "bool"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								a:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "and"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "bool"
-													value: false
-											a:
-												score: 7
-												parameter:
-													type: "bool"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "bool"
-								b:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "and"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "and"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "bool"
-											b:
-												score: 7
-												parameter:
-													type: "bool"
-				describe "or", ->
-					it "collapses constants for false, false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: false										
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants for true, true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: true										
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "collapses constants for true, false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: false										
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true
-					it "collapses constants for false, true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: true										
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "or"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "bool"
-													value: true
-											b:
-												score: 7
-												parameter:
-													type: "bool"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								a:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "or"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "bool"
-													value: false
-											a:
-												score: 7
-												parameter:
-													type: "bool"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "bool"
-								b:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "or"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "or"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "bool"
-											b:
-												score: 7
-												parameter:
-													type: "bool"
-				describe "xor", ->
-					it "collapses constants for false, false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: false										
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants for true, true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: true										
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false									
-					it "collapses constants for true, false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: false										
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true
-					it "collapses constants for false, true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								b:
-									score: 7
-									primitive:
-										type: "bool"
-										value: true										
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "bool"
-										value: true
-								b:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "xor"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "bool"
-													value: true
-											b:
-												score: 7
-												parameter:
-													type: "bool"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "bool"
-										value: false
-								a:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "xor"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "bool"
-													value: false
-											a:
-												score: 7
-												parameter:
-													type: "bool"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "bool"
-								b:
-									score: 7
-									parameter:
-										type: "bool"
-						expect findFunction platform, input, "xor"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "xor"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "bool"
-											b:
-												score: 7
-												parameter:
-													type: "bool"
+		describe "bool", ->
+			describe "operators", ->
+				operators = undefined
+				beforeEach ->
+					operators = require "./operators"
+				describe "imports", ->
+					it "makeUnary", ->
+						expect(operators.makeUnary).toBe require "./../../helpers/makeUnary"
+					it "makeOrderedBinary", ->
+						expect(operators.makeOrderedBinary).toBe require "./../../helpers/makeOrderedBinary"						
+					it "makeUnorderedBinary", ->
+						expect(operators.makeUnorderedBinary).toBe require "./../../helpers/makeUnorderedBinary"
+					it "codeCache", ->
+						expect(operators.codeCache).toBe require "./../codeCache"
+				describe "defines", ->
+					codeCache = functions = unaries = unorderedBinaries = orderedBinaries = undefined
+					beforeEach ->
+						makeUnary = operators.makeUnary
+						makeOrderedBinary = operators.makeOrderedBinary
+						makeUnorderedBinary = operators.makeUnorderedBinary
+						codeCache = operators.codeCache
+						operators.makeUnary = jasmine.createSpy()
+						operators.makeOrderedBinary = jasmine.createSpy()
+						operators.makeUnorderedBinary = jasmine.createSpy()
+						unaries = {}
+						operators.makeUnary.and.callFake (name) ->
+							toReturn = makeUnary.apply this, arguments
+							unaries[name] =
+								args: (argument for argument in arguments) 
+								result: toReturn
+							return toReturn
+						orderedBinaries = {}
+						operators.makeOrderedBinary.and.callFake (name) ->
+							toReturn = makeOrderedBinary.apply this, arguments
+							orderedBinaries[name] = 
+								args: (argument for argument in arguments)
+								result: toReturn
+							return toReturn
+						unorderedBinaries = {}							
+						operators.makeUnorderedBinary.and.callFake (name) ->
+							toReturn = makeUnorderedBinary.apply this, arguments
+							unorderedBinaries[name] = 
+								args: (argument for argument in arguments)
+								result: toReturn
+							return toReturn							
+						functions = operators()
+						operators.makeUnary = makeUnary
+						operators.makeOrderedBinary = makeOrderedBinary
+						operators.makeUnorderedBinary = makeUnorderedBinary						
+						
+						operators.codeCache = (tokenized, cache, value) ->
+							expect(tokenized).toEqual "Test Tokenized"
+							expect(cache).toEqual "Test Cache"
+							switch value
+								when "Test Input" then return "Test Code"
+								when "Test Input A" then return "Test Code A"
+								when "Test Input B" then return "Test Code B"
+								else expect(false).toBeTruthy()
+					afterEach ->
+						operators.codeCache = codeCache
+					describe "and", ->
+						it "is returned", ->
+							_and = (func for func in functions when func.name is "and")
+							expect(_and.length).toEqual 1
+							expect(_and[0]).toBe unorderedBinaries.and.result
+							expect unorderedBinaries.and.args
+								.toEqual ["and", "bool", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						it "supports constant inputs for false, false", ->
+							expect(unorderedBinaries.and.args[3] false, false).toBe false  
+							
+						it "supports constant inputs for false, true", ->
+							expect(unorderedBinaries.and.args[3] false, true).toBe false  
+							
+						it "supports constant inputs for true, false", ->
+							expect(unorderedBinaries.and.args[3] true, false).toBe false  
+							
+						it "supports constant inputs for true, true", ->
+							expect(unorderedBinaries.and.args[3] true, true).toBe true  																					
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect unorderedBinaries.and.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) && (Test Code B)"
+					describe "or", ->
+						it "is returned", ->
+							_or = (func for func in functions when func.name is "or")
+							expect(_or.length).toEqual 1
+							expect(_or[0]).toBe unorderedBinaries.or.result
+							expect unorderedBinaries.or.args
+								.toEqual ["or", "bool", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						it "supports constant inputs for false, false", ->
+							expect(unorderedBinaries.or.args[3] false, false).toBe false  
+							
+						it "supports constant inputs for true, false", ->
+							expect(unorderedBinaries.or.args[3] true, false).toBe true
+							
+						it "supports constant inputs for false, true", ->
+							expect(unorderedBinaries.or.args[3] false, true).toBe true  
+							
+						it "supports constant inputs for true, true", ->
+							expect(unorderedBinaries.or.args[3] true, true).toBe true  														  
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect unorderedBinaries.or.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) || (Test Code B)"
+					describe "equal", ->
+						it "is returned", ->
+							equal = (func for func in functions when func.name is "equal")
+							expect(equal.length).toEqual 1
+							expect(equal[0]).toBe unorderedBinaries.equal.result
+							expect unorderedBinaries.equal.args
+								.toEqual ["equal", "bool", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						it "supports constant inputs for false, false", ->
+							expect(unorderedBinaries.equal.args[3] false, false).toBe true  
+							
+						it "supports constant inputs for true, false", ->
+							expect(unorderedBinaries.equal.args[3] true, false).toBe false
+							
+						it "supports constant inputs for false, true", ->
+							expect(unorderedBinaries.equal.args[3] false, true).toBe false  
+							
+						it "supports constant inputs for true, true", ->
+							expect(unorderedBinaries.equal.args[3] true, true).toBe true  														  
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect unorderedBinaries.equal.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) == (Test Code B)"
+					describe "not", ->
+						it "is returned", ->
+							_not = (func for func in functions when func.name is "not")
+							expect(_not.length).toEqual 1
+							expect(_not[0]).toBe unaries.not.result
+							expect unaries.not.args
+								.toEqual ["not", "bool", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						it "supports constant inputs of false", ->
+							expect(unaries.not.args[3] false).toBe true
+						
+						it "supports constant inputs of true", ->
+							expect(unaries.not.args[3] true).toBe false
+						
+						it "supports native code generation", ->
+							expect unaries.not.args[4] "Test Tokenized", "Test Cache", "Test Input"
+								.toEqual "!(Test Code)"																		
