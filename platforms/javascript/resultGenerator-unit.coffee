@@ -10,7 +10,8 @@ describe "platforms", ->
 			describe "on calling", ->
 				it "returns an anonymous object given properties", ->
 					codeCache = resultGenerator.codeCache
-					resultGenerator.codeCache = (cache, input) ->
+					resultGenerator.codeCache = (tokenized, cache, input) ->
+						expect(tokenized).toEqual "Test Tokenized"
 						expect(cache).toEqual "Test Cache"
 						switch input
 							when "Test Property AA" then return "Test Code AA"
@@ -28,7 +29,7 @@ describe "platforms", ->
 											propertyABA: "Test Property ABA"
 							propertyB: "Test Property B"
 							
-					result = resultGenerator "Test Cache", output
+					result = resultGenerator "Test Tokenized", "Test Cache", output
 					resultGenerator.codeCache = codeCache
 									
 					expect(result).toEqual 	"""
@@ -44,14 +45,15 @@ describe "platforms", ->
 											"""
 				it "returns the generated code given non-properties", ->
 					codeCache = resultGenerator.codeCache
-					resultGenerator.codeCache = (cache, input) ->
+					resultGenerator.codeCache = (tokenized, cache, input) ->
+						expect(tokenized).toEqual "Test Tokenized"
 						expect(cache).toEqual "Test Cache"
 						expect(input).toBe output
 						"Test Code"
 					
 					output = {}
 							
-					result = resultGenerator "Test Cache", output
+					result = resultGenerator "Test Tokenized", "Test Cache", output
 					resultGenerator.codeCache = codeCache
 									
 					expect(result).toEqual 	"""
