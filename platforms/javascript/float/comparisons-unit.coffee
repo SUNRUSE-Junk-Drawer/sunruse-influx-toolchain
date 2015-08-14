@@ -1,743 +1,166 @@
-platform = require "./../types"
-findFunction = require "./../../../toolchain/findFunction"
-
 describe "platforms", ->
 	describe "javascript", ->
-		describe "primitives", ->
-			describe "float", ->
-				describe "equal", ->
-					it "collapses constants to false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.6
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.4										
-						expect findFunction platform, input, "equal"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants to true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.4										
-						expect findFunction platform, input, "equal"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "equal"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "equal"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											b:
-												score: 7
-												parameter:
-													type: "float"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								a:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "equal"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "equal"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											a:
-												score: 7
-												parameter:
-													type: "float"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "float"
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "equal"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "equal"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "float"
-											b:
-												score: 7
-												parameter:
-													type: "float"
-				describe "less", ->
-					it "collapses constants to false when greater", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.3										
-						expect findFunction platform, input, "less"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants to false when equal", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.4										
-						expect findFunction platform, input, "less"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false									
-					it "collapses constants to true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.7										
-						expect findFunction platform, input, "less"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "less"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "less"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											b:
-												score: 7
-												parameter:
-													type: "float"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								a:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "less"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "less"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											a:
-												score: 7
-												parameter:
-													type: "float"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "float"
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "less"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "less"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "float"
-											b:
-												score: 7
-												parameter:
-													type: "float"
-				describe "greater", ->
-					it "collapses constants to false when less", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.7										
-						expect findFunction platform, input, "greater"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants to false when equal", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.4										
-						expect findFunction platform, input, "greater"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false									
-					it "collapses constants to true", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 4.3										
-						expect findFunction platform, input, "greater"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "greater"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "greater"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											b:
-												score: 7
-												parameter:
-													type: "float"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								a:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "greater"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "greater"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											a:
-												score: 7
-												parameter:
-													type: "float"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "float"
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "greater"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "greater"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "float"
-											b:
-												score: 7
-												parameter:
-													type: "float"																																							
-				describe "lessOrEqual", ->
-					it "collapses constants to false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.3										
-						expect findFunction platform, input, "lessOrEqual"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants to true when equal", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.4										
-						expect findFunction platform, input, "lessOrEqual"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "collapses constants to true when less", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.7										
-						expect findFunction platform, input, "lessOrEqual"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "lessOrEqual"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "lessOrEqual"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											b:
-												score: 7
-												parameter:
-													type: "float"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								a:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "lessOrEqual"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "lessOrEqual"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											a:
-												score: 7
-												parameter:
-													type: "float"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "float"
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "lessOrEqual"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "lessOrEqual"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "float"
-											b:
-												score: 7
-												parameter:
-													type: "float"
-				describe "greaterOrEqual", ->
-					it "collapses constants to false", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.7										
-						expect findFunction platform, input, "greaterOrEqual"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: false
-					it "collapses constants to true when equal", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.4										
-						expect findFunction platform, input, "greaterOrEqual"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "collapses constants to true when greater", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									primitive:
-										type: "float"
-										value: 5.3										
-						expect findFunction platform, input, "greaterOrEqual"
-							.toEqual
-								score: 11
-								primitive:
-									type: "bool"
-									value: true									
-					it "does not collapse when only the first is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "greaterOrEqual"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "greaterOrEqual"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											b:
-												score: 7
-												parameter:
-													type: "float"
-					it "does not collapse when only the second is constant", ->
-						input = 
-							properties:
-								b:
-									score: 3
-									primitive:
-										type: "float"
-										value: 5.4
-								a:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "greaterOrEqual"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "greaterOrEqual"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											b:
-												score: 3
-												primitive:
-													type: "float"
-													value: 5.4
-											a:
-												score: 7
-												parameter:
-													type: "float"													
-					it "does not collapse when neither is constant", ->
-						input = 
-							properties:
-								a:
-									score: 3
-									native:
-										function:
-											output: "float"
-								b:
-									score: 7
-									parameter:
-										type: "float"
-						expect findFunction platform, input, "greaterOrEqual"
-							.toEqual
-								score: 11
-								native:
-									function: 
-										name: "greaterOrEqual"
-										compile: jasmine.any(Function)
-										output: "bool"
-									input:
-										properties:
-											a:
-												score: 3
-												native:
-													function:
-														output: "float"
-											b:
-												score: 7
-												parameter:
-													type: "float"																																																				
+		describe "float", ->
+			describe "comparisons", ->
+				comparisons = undefined
+				beforeEach ->
+					comparisons = require "./comparisons"
+				describe "imports", ->
+					it "makeOrderedBinary", ->
+						expect(comparisons.makeOrderedBinary).toBe require "./../../helpers/makeOrderedBinary"						
+					it "makeUnorderedBinary", ->
+						expect(comparisons.makeUnorderedBinary).toBe require "./../../helpers/makeUnorderedBinary"						
+				describe "defines", ->
+					codeCache = functions = unorderedBinaries = orderedBinaries = undefined
+					beforeEach ->
+						makeOrderedBinary = comparisons.makeOrderedBinary
+						makeUnorderedBinary = comparisons.makeUnorderedBinary
+						comparisons.makeOrderedBinary = jasmine.createSpy()
+						comparisons.makeUnorderedBinary = jasmine.createSpy()
+						codeCache = comparisons.codeCache
+						orderedBinaries = {}
+						comparisons.makeOrderedBinary.and.callFake (name) ->
+							toReturn = makeOrderedBinary.apply this, arguments
+							orderedBinaries[name] = 
+								args: (argument for argument in arguments)
+								result: toReturn
+							return toReturn
+						unorderedBinaries = {}							
+						comparisons.makeUnorderedBinary.and.callFake (name) ->
+							toReturn = makeUnorderedBinary.apply this, arguments
+							unorderedBinaries[name] = 
+								args: (argument for argument in arguments)
+								result: toReturn
+							return toReturn							
+						functions = comparisons()
+						comparisons.makeOrderedBinary = makeOrderedBinary
+						comparisons.makeUnorderedBinary = makeUnorderedBinary		
+						comparisons.codeCache = (tokenized, cache, value) ->
+							expect(tokenized).toEqual "Test Tokenized"
+							expect(cache).toEqual "Test Cache"
+							switch value
+								when "Test Input" then return "Test Code"
+								when "Test Input A" then return "Test Code A"
+								when "Test Input B" then return "Test Code B"
+								else expect(false).toBeTruthy()
+					afterEach ->
+						comparisons.codeCache = codeCache				
+					describe "equal", ->
+						it "is returned", ->
+							equal = (func for func in functions when func.name is "equal")
+							expect(equal.length).toEqual 1
+							expect(equal[0]).toBe unorderedBinaries.equal.result
+							expect unorderedBinaries.equal.args
+								.toEqual ["equal", "float", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						describe "supports constant inputs", ->
+							it "less", ->
+								expect(unorderedBinaries.equal.args[3] 7, 8).toBeFalsy() 
+							it "equal", ->
+								expect(unorderedBinaries.equal.args[3] 8, 8).toBeTruthy()
+							it "greater", ->
+								expect(unorderedBinaries.equal.args[3] 9, 8).toBeFalsy()															
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect unorderedBinaries.equal.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) == (Test Code B)"
+								
+					describe "greater", ->
+						it "is returned", ->
+							greater = (func for func in functions when func.name is "greater")
+							expect(greater.length).toEqual 1
+							expect(greater[0]).toBe orderedBinaries.greater.result
+							expect orderedBinaries.greater.args
+								.toEqual ["greater", "float", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						describe "supports constant inputs", ->
+							it "less", ->
+								expect(orderedBinaries.greater.args[3] 7, 8).toBeFalsy() 
+							it "equal", ->
+								expect(orderedBinaries.greater.args[3] 8, 8).toBeFalsy()
+							it "greater", ->
+								expect(orderedBinaries.greater.args[3] 9, 8).toBeTruthy()															
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect orderedBinaries.greater.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) > (Test Code B)"								
+								
+					describe "less", ->
+						it "is returned", ->
+							less = (func for func in functions when func.name is "less")
+							expect(less.length).toEqual 1
+							expect(less[0]).toBe orderedBinaries.less.result
+							expect orderedBinaries.less.args
+								.toEqual ["less", "float", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						describe "supports constant inputs", ->
+							it "less", ->
+								expect(orderedBinaries.less.args[3] 7, 8).toBeTruthy() 
+							it "equal", ->
+								expect(orderedBinaries.less.args[3] 8, 8).toBeFalsy()
+							it "greater", ->
+								expect(orderedBinaries.less.args[3] 9, 8).toBeFalsy()															
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect orderedBinaries.less.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) < (Test Code B)"								
+								
+					describe "greaterEqual", ->
+						it "is returned", ->
+							greaterEqual = (func for func in functions when func.name is "greaterEqual")
+							expect(greaterEqual.length).toEqual 1
+							expect(greaterEqual[0]).toBe orderedBinaries.greaterEqual.result
+							expect orderedBinaries.greaterEqual.args
+								.toEqual ["greaterEqual", "float", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						describe "supports constant inputs", ->
+							it "less", ->
+								expect(orderedBinaries.greaterEqual.args[3] 7, 8).toBeFalsy() 
+							it "equal", ->
+								expect(orderedBinaries.greaterEqual.args[3] 8, 8).toBeTruthy()
+							it "greater", ->
+								expect(orderedBinaries.greaterEqual.args[3] 9, 8).toBeTruthy()															
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect orderedBinaries.greaterEqual.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) >= (Test Code B)"								
+								
+					describe "lessEqual", ->
+						it "is returned", ->
+							lessEqual = (func for func in functions when func.name is "lessEqual")
+							expect(lessEqual.length).toEqual 1
+							expect(lessEqual[0]).toBe orderedBinaries.lessEqual.result
+							expect orderedBinaries.lessEqual.args
+								.toEqual ["lessEqual", "float", "bool", (jasmine.any Function), (jasmine.any Function)]
+						
+						describe "supports constant inputs", ->
+							it "less", ->
+								expect(orderedBinaries.lessEqual.args[3] 7, 8).toBeTruthy() 
+							it "equal", ->
+								expect(orderedBinaries.lessEqual.args[3] 8, 8).toBeTruthy()
+							it "greater", ->
+								expect(orderedBinaries.lessEqual.args[3] 9, 8).toBeFalsy()															
+							
+						it "supports native code generation", ->				
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect orderedBinaries.lessEqual.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "(Test Code A) <= (Test Code B)"																

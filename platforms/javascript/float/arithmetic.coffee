@@ -1,96 +1,13 @@
-valueIsPrimitive = require "./../../../toolchain/valueIsPrimitive"
+module.exports = ->
+	[
+		module.exports.makeUnary "negate", "float", "float", ((value) -> -value), (tokenized, cache, value) -> "-(" + (module.exports.codeCache tokenized, cache, value) + ")"
+		module.exports.makeUnorderedBinary "add", "float", "float", ((a, b) -> a + b), (tokenized, cache, value) -> "(" + (module.exports.codeCache tokenized, cache, value.properties.a) + ") + (" + (module.exports.codeCache tokenized, cache, value.properties.b) + ")"
+		module.exports.makeOrderedBinary "subtract", "float", "float", ((a, b) -> a - b), (tokenized, cache, value) -> "(" + (module.exports.codeCache tokenized, cache, value.properties.a) + ") - (" + (module.exports.codeCache tokenized, cache, value.properties.b) + ")"
+		module.exports.makeUnorderedBinary "multiply", "float", "float", ((a, b) -> a * b), (tokenized, cache, value) -> "(" + (module.exports.codeCache tokenized, cache, value.properties.a) + ") * (" + (module.exports.codeCache tokenized, cache, value.properties.b) + ")"
+		module.exports.makeOrderedBinary "divide", "float", "float", ((a, b) -> a / b), (tokenized, cache, value) -> "(" + (module.exports.codeCache tokenized, cache, value.properties.a) + ") / (" + (module.exports.codeCache tokenized, cache, value.properties.b) + ")"
+	]
 
-module.exports = [
-		floatAdd =
-			name: "add"
-			compile: (value) -> 
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "float" then return null
-				if not valueIsPrimitive value.properties.b, "float" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "float"
-							value: value.properties.a.primitive.value + value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: floatAdd
-			output: "float"
-	,
-		floatSubtract =
-			name: "subtract"
-			compile: (value) ->
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "float" then return null
-				if not valueIsPrimitive value.properties.b, "float" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "float"
-							value: value.properties.a.primitive.value - value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: floatSubtract
-			output: "float"
-	,
-		floatMultiply =
-			name: "multiply"
-			compile: (value) ->
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "float" then return null
-				if not valueIsPrimitive value.properties.b, "float" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "float"
-							value: value.properties.a.primitive.value * value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: floatMultiply
-			output: "float"				
-	,
-		floatDivide =
-			name: "divide"
-			compile: (value) ->
-				if not value.properties then return null
-				if not valueIsPrimitive value.properties.a, "float" then return null
-				if not valueIsPrimitive value.properties.b, "float" then return null
-				if value.properties.a.primitive and value.properties.b.primitive
-					return unused =
-						score: value.properties.a.score + value.properties.b.score + 1
-						primitive:
-							type: "float"
-							value: value.properties.a.primitive.value / value.properties.b.primitive.value
-				return unused =
-					score: value.properties.a.score + value.properties.b.score + 1
-					native:
-						input: value
-						function: floatDivide
-			output: "float"				
-	,
-		floatNegate =
-			name: "negate"
-			compile: (value) ->
-				if not valueIsPrimitive value, "float" then return null
-				if value.primitive
-					return unused =
-						score: value.score + 1
-						primitive:
-							type: "float"
-							value: -value.primitive.value				
-				return unused =
-					score: value.score + 1
-					native:
-						input: value
-						function: floatNegate
-			output: "float"	
-]
+module.exports.codeCache = require "./../codeCache"
+module.exports.makeUnary = require "./../../helpers/makeUnary"
+module.exports.makeOrderedBinary = require "./../../helpers/makeOrderedBinary"
+module.exports.makeUnorderedBinary = require "./../../helpers/makeUnorderedBinary"
