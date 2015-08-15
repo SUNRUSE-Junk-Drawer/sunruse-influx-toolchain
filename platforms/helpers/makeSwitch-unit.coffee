@@ -13,6 +13,7 @@ describe "platforms", ->
 				valueA = valueB = valueOn = valueIsPrimitive = valuesEquivalent = instance = undefined
 				beforeEach ->
 					valueIsPrimitive = makeSwitch.valueIsPrimitive
+					valuesEquivalent = makeSwitch.valuesEquivalent
 					valueA = "Test Input A"
 					valueB = "Test Input B"
 					valueOn = "Test Value On"
@@ -30,6 +31,7 @@ describe "platforms", ->
 					instance = makeSwitch "Test Primitive Type", "Test Generate Code"
 				afterEach -> 
 					makeSwitch.valueIsPrimitive = valueIsPrimitive
+					makeSwitch.valuesEquivalent = valuesEquivalent
 				it "sets a name of \"switch\"", ->
 					expect(instance.name).toEqual "switch"
 				it "sets the return type", ->
@@ -166,7 +168,63 @@ describe "platforms", ->
 										expect(result.native.input.properties.b).toBe input.properties.b
 										expect(result.native.input.properties.on).toBe input.properties.on
 				describe "inputsEqual", ->
-					xit "returns truthy when \"a\", \"b\" and \"on\" match", ->
-					xit "returns falsy when \"a\" does not match", ->
-					xit "returns falsy when \"b\" does not match", ->
-					xit "returns falsy when \"on\" does not match", ->					
+					beforeEach ->
+						makeSwitch.valuesEquivalent = (tokenized, a, b) ->
+							expect(tokenized).toEqual "Test Tokenized"
+							console.log a + " vs " + b
+							switch a
+								when "Test Input AA" then return b is "Test Input BA"
+								when "Test Input AB" then return b is "Test Input BB"
+								when "Test Input AO" then return b is "Test Input BO"
+					it "returns truthy when \"a\", \"b\" and \"on\" match", ->
+						a = 
+							properties:
+								a: "Test Input AA"
+								b: "Test Input AB"
+								on: "Test Input AO"
+						b = 
+							properties:
+								a: "Test Input BA"
+								b: "Test Input BB"
+								on: "Test Input BO"
+						expect instance.inputsEqual "Test Tokenized", a, b
+							.toBeTruthy()
+					it "returns falsy when \"a\" does not match", ->
+						a = 
+							properties:
+								a: "Test Input A?"
+								b: "Test Input AB"
+								on: "Test Input AO"
+						b = 
+							properties:
+								a: "Test Input BA"
+								b: "Test Input BB"
+								on: "Test Input BO"
+						expect instance.inputsEqual "Test Tokenized", a, b
+							.toBeFalsy()						
+					it "returns falsy when \"b\" does not match", ->
+						a = 
+							properties:
+								a: "Test Input AA"
+								b: "Test Input AB"
+								on: "Test Input AO"
+						b = 
+							properties:
+								a: "Test Input BA"
+								b: "Test Input B?"
+								on: "Test Input BO"
+						expect instance.inputsEqual "Test Tokenized", a, b
+							.toBeFalsy()						
+					it "returns falsy when \"on\" does not match", ->
+						a = 
+							properties:
+								a: "Test Input AA"
+								b: "Test Input AB"
+								on: "Test Input A?"
+						b = 
+							properties:
+								a: "Test Input BA"
+								b: "Test Input BB"
+								on: "Test Input BO"
+						expect instance.inputsEqual "Test Tokenized", a, b
+							.toBeFalsy()					
