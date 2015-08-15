@@ -50,7 +50,7 @@ describe "platforms", ->
 								b: "Test Input B"
 								on: "Test Input On"		
 						expect created.int.args[1] "Test Tokenized", "Test Cache", input
-							.toEqual "(Test Code On) ? (Test Code A) : (Test Code B)"
+							.toEqual "(Test Code On) ? (Test Code B) : (Test Code A)"
 				describe "float", ->
 					it "is returned", ->
 						float = (func for func in functions when func.output is "float")
@@ -66,7 +66,7 @@ describe "platforms", ->
 								b: "Test Input B"
 								on: "Test Input On"		
 						expect created.float.args[1] "Test Tokenized", "Test Cache", input
-							.toEqual "(Test Code On) ? (Test Code A) : (Test Code B)"
+							.toEqual "(Test Code On) ? (Test Code B) : (Test Code A)"
 							
 				describe "bool", ->
 					it "is returned", ->
@@ -83,4 +83,4 @@ describe "platforms", ->
 								b: "Test Input B"
 								on: "Test Input On"		
 						expect created.bool.args[1] "Test Tokenized", "Test Cache", input
-							.toEqual "(Test Code On) ? (Test Code A) : (Test Code B)"							
+							.toEqual "(Test Code On) ? (Test Code B) : (Test Code A)"							
