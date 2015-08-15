@@ -28,12 +28,12 @@ module.exports = (tokenized, parameters) ->
 	if parameters
 		for parameter in parameters
 	
-			tokens = parameter.split "."	
+			tokens = parameter.split ">"	
 			found = input
 		
 			while tokens.length > 1
 				if found.parameter or found.primitive
-					chain = parameter.split "."
+					chain = parameter.split ">"
 					chain.pop() for [0 ... tokens.length]
 					throw 
 						reason: "parameterDefinedMultipleTimes"
@@ -50,7 +50,7 @@ module.exports = (tokenized, parameters) ->
 				tokens.shift()
 		
 			if found.properties or found.parameter or found.primitive
-				chain = parameter.split "."
+				chain = parameter.split ">"
 				chain.pop()
 				throw 
 					reason: "parameterDefinedMultipleTimes"
@@ -68,7 +68,7 @@ module.exports = (tokenized, parameters) ->
 			if found.primitive then continue
 		
 			if not tokenized.primitives[tokens[0]]
-				chain = parameter.split "."
+				chain = parameter.split ">"
 				chain.pop() for [0 ... tokens.length]		
 				throw
 					reason: "primitiveTypeOrLiteralUnrecognized"

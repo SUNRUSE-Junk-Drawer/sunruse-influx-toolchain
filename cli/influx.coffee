@@ -25,7 +25,7 @@ configuration = yargs
 	.default "n", "main"
 	
 	.alias "i", "input"
-	.describe "i", "One or more parameters to include, in the format propertyName.propertyName.primitiveTypeName, or just primitiveTypeName"
+	.describe "i", "One or more parameters to include, in the format propertyName>propertyName>primitiveTypeName, or just primitiveTypeName"
 	.array "i"	
 	.string "i"
 	
