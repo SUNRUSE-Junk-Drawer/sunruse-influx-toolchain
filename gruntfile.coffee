@@ -8,7 +8,7 @@ module.exports = (grunt) ->
         ]
         
     grunt.registerTask "build", ["clean:build", "coffee"]
-    grunt.registerTask "test", ["jasmine_nodejs:unit"]
+    grunt.registerTask "test", ["jasmine_nodejs:unit", "jasmine_nodejs:integration"]
     grunt.registerTask "deploy", ["clean:deploy", "copy:deploy"]
         
     grunt.initConfig
@@ -17,6 +17,8 @@ module.exports = (grunt) ->
                 specNameSuffix: ".js"
             unit: 
                 specs: ["**/*-unit.js"]
+            integration: 
+                specs: ["**/*-integration.js"]
         clean:
             build: "build"
             deploy: "deploy"
@@ -25,7 +27,7 @@ module.exports = (grunt) ->
                 files: [
                     expand: true
                     cwd: "build"
-                    src: ["**/*.js", "!**/*-unit.js"]
+                    src: ["**/*.js", "!**/*-unit.js", "!**/*-integration.js"]
                     dest: "deploy"
                 ]
         coffee:
@@ -39,5 +41,5 @@ module.exports = (grunt) ->
         watch:
             options:
                 atBegin: true
-            files: ["gruntfile.coffee", "toolchain/**/*", "platforms/**/*", "cli/**/*"]
+            files: ["gruntfile.coffee", "toolchain/**/*", "platforms/**/*", "cli/**/*", "libraries/**/*", "examples/**/*"]
             tasks: ["build", "test", "deploy"]
