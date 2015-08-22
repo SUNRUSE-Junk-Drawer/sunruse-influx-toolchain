@@ -52,6 +52,9 @@
 #				undefined.  When it is, return the value.
 #			equal: Takes two values previously returned by parse.  Return
 #				truthy when they refer to the same value, else, falsy.
+#			assertionPass: When not undefined, a value to be compared with the
+#				a primitive value returned by an assertion, using the "equal"
+#				function.  The assertion will pass when this matches.
 # 	nativeFunctions: Initially empty array of objects describing functions.
 #		name: String identifying the function.
 #		compile: Takes a value object and returns a new value object describing 

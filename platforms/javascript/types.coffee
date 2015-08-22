@@ -21,6 +21,7 @@ module.exports =
 					when "true" then return true
 					when "false" then return false
 			equal: (a, b) -> a == b
+			assertionPass: true
 	functions: []
 	compile: (tokenized, input, output) ->
 		cache = module.exports.parameterCache input
