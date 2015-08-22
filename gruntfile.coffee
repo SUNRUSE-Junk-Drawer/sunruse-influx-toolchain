@@ -8,7 +8,7 @@ module.exports = (grunt) ->
         ]
         
     grunt.registerTask "build", ["clean:build", "coffee"]
-    grunt.registerTask "test", ["jasmine_nodejs:unit", "jasmine_nodejs:integration"]
+    grunt.registerTask "test", ["jasmine_nodejs:unit", "jasmine_nodejs:selftest", "jasmine_nodejs:integration"]
     grunt.registerTask "deploy", ["clean:deploy", "copy:deploy"]
         
     grunt.initConfig
@@ -17,6 +17,8 @@ module.exports = (grunt) ->
                 specNameSuffix: ".js"
             unit: 
                 specs: ["**/*-unit.js"]
+            selftest:
+                specs: ["build/toolchain/selftest.js"]
             integration: 
                 specs: ["**/*-integration.js"]
         clean:
@@ -27,7 +29,7 @@ module.exports = (grunt) ->
                 files: [
                     expand: true
                     cwd: "build"
-                    src: ["**/*.js", "!**/*-unit.js", "!**/*-integration.js"]
+                    src: ["**/*.js", "!**/*-unit.js", "!toolchain/selftest.js", "!**/*-integration.js"]
                     dest: "deploy"
                 ]
         coffee:
