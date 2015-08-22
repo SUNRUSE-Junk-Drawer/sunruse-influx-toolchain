@@ -20,11 +20,13 @@ describe "cli", ->
 				expect(compiler.processStderr).toBe process.stderr												
 			it "process.exit", ->	
 				expect(compiler.processExit).toBe process.exit	
+			it "runAssertions", ->
+				expect(compiler.runAssertions).toBe require "./../toolchain/runAssertions"
 			describe "the platform", ->
 				it "javascript", ->
 					expect(compiler.platforms.javascript).toBe require "./../platforms/javascript/types"	
 		describe "when called", ->
-			fileContents = flushCallback = allCallbacksDone = tokenizer = configuration = platforms = jsonStringify = fsReadFile = findFunction = parameterBuilder = processStdout = processStderr = processExit = null
+			runAssertions = fileContents = flushCallback = allCallbacksDone = tokenizer = configuration = platforms = jsonStringify = fsReadFile = findFunction = parameterBuilder = processStdout = processStderr = processExit = null
 			beforeEach ->
 				fsReadFile = compiler.fsReadFile
 				findFunction = compiler.findFunction
@@ -36,6 +38,7 @@ describe "cli", ->
 				platforms = compiler.platforms	
 				jsonStringify = compiler.jsonStringify
 				tokenizer = compiler.tokenizer
+				runAssertions = compiler.runAssertions
 			
 				configuration =
 					platform: "platformB"
@@ -93,6 +96,8 @@ describe "cli", ->
 					write: jasmine.createSpy()
 				compiler.processStderr = 
 					write: jasmine.createSpy()	
+				compiler.runAssertions = ->
+					expect(false).toBeTruthy()
 				spyOn compiler, "processExit"
 					.and.stub()
 				spyOn compiler, "jsonStringify"			
@@ -106,9 +111,23 @@ describe "cli", ->
 						
 				compiler.platforms = 
 					platformA:
+						primitives:
+							"test primitive a":
+								assertionPass: "platform a primitive a assertion pass"
+							"test primitive b":
+								assertionPass: "platform a primitive b assertion pass"
+							"test primitive c":
+								assertionPass: "platform a primitive c assertion pass"
 						compile: ->
 							expect(false).toBeTruthy()
 					platformB:
+						primitives:
+							"test primitive a":
+								assertionPass: "platform b primitive a assertion pass"
+							"test primitive b":
+								assertionPass: "platform b primitive b assertion pass"
+							"test primitive c":
+								assertionPass: "platform b primitive c assertion pass"
 						compile: (tokenized, input, output) ->
 							expect(tokenized).toBe compiler.platforms.platformB
 							expect(tokenized.functions).toEqual "Test Tokenized"
@@ -116,6 +135,13 @@ describe "cli", ->
 							expect(output).toEqual "Test Compiled Output"
 							"Test Native Code"
 					platformC:
+						primitives:
+							"test primitive a":
+								assertionPass: "platform c primitive a assertion pass"
+							"test primitive b":
+								assertionPass: "platform c primitive b assertion pass"
+							"test primitive c":
+								assertionPass: "platform c primitive c assertion pass"
 						compile: ->
 							expect(false).toBeTruthy()
 						
@@ -129,6 +155,7 @@ describe "cli", ->
 				compiler.platforms = platforms
 				compiler.jsonStringify = jsonStringify
 				compiler.tokenizer = tokenizer
+				compiler.runAssertions = runAssertions
 				
 			parameterTests = ->
 				it "writes to stderr when a type resolution exception occurs while building an input from parameters", ->
@@ -244,53 +271,142 @@ describe "cli", ->
 					expect(compiler.processStdout.write).not.toHaveBeenCalled()
 					expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Unexpected error while tokenizing the source code:"]]					
 				
-			valueTests = ->
+			assertionTests = (next) ->
 				tokenizeTests()
 				
-				it "writes to stderr when the function fails to compile", ->
-					compiler.findFunction.and.callFake (tokenized, input, functionName, logs, logPrefix) ->
-						expect(tokenized).toBe compiler.platforms.platformB
-						expect(tokenized.functions).toEqual "Test Tokenized"
-							
-						expect(input).toEqual "Test Built Parameters"
-						expect(functionName).toEqual "Test FunctionName"
-						if logs
-							expect(logPrefix).toBe ""
-							logs.push "Test Log A"
-							logs.push "Test Log B"
-							logs.push "Test Log C"
-						null
+				describe "when assertions are disabled", ->
+					it "does not check assertions passed", ->						
+						compiler configuration
 						
-					compiler.processStderr.write.and.callFake ->
-						expect(compiler.processExit).not.toHaveBeenCalled()						
-						
-					compiler configuration
-					
-					flushCallback()
-					flushCallback()
-					flushCallback()
-					
-					expect(compiler.processExit.calls.allArgs()).toEqual [[1]]
-					expect(compiler.processStdout.write).not.toHaveBeenCalled()
-					expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Failed to compile the input specified as parameters for the function name specified.\nThe log of the pattern matches attempted follows:\nTest Log A\nTest Log B\nTest Log C"]]
+						flushCallback()
+						flushCallback()
+						flushCallback()
+					next()
 				
-				it "writes to stderr and then rethrows when an unexpected exception occurs while compiling", ->
-					compiler.findFunction.and.callFake ->
-						throw "Test Unexpected Exception"
+				describe "when assertions are enabled", ->
+					beforeEach ->
+						configuration.runAssertions = true
 						
-					compiler.processStderr.write.and.callFake ->
-						expect(compiler.processExit).not.toHaveBeenCalled()						
+					describe "on success", ->
+						beforeEach ->
+							compiler.runAssertions = (_tokenized) ->
+								expect(_tokenized).toBe compiler.platforms.platformB
+								expect(_tokenized.functions).toEqual "Test Tokenized"
+								return [
+										assertion:
+											line:
+												filename: "Test File A"
+												line: 18
+										resultType: "successful"
+								]
+						next()
 						
-					expect ->
-							compiler configuration
-							flushCallback()
-							flushCallback()
-							flushCallback()							
-						.toThrow "Test Unexpected Exception"
+					it "writes to stderr on failure", ->
+						compiler.runAssertions = (_tokenized) ->
+							expect(_tokenized).toBe compiler.platforms.platformB
+							expect(_tokenized.functions).toEqual "Test Tokenized"
+							return [
+									assertion:
+										line:
+											filename: "Test File A"
+											line: 18
+									resultType: "successful"
+								,
+									assertion:
+										line:
+											filename: "Test File A"
+											line: 24
+									resultType: "failedToCompile"
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 7
+									resultType: "didNotReturnPrimitiveConstant"
+									output:
+										parameter:
+											type: "a type"
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 9
+									resultType: "primitiveTypeNotAssertable"
+									output:
+										primitive:
+											type: "test primitive a"
+											value: 123
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 11
+									resultType: "primitiveValueIncorrect"								
+									output:
+										primitive:
+											type: "test primitive b"
+											value: [4, 8, 5]
+							]
+							
+						compiler.processStderr.write.and.callFake ->
+							expect(compiler.processExit).not.toHaveBeenCalled()
+						
+						compiler configuration
+						
+						flushCallback()
+						flushCallback()
+						flushCallback()
+						
+						expect(compiler.processExit.calls.allArgs()).toEqual [[1]]
+						expect(compiler.processStdout.write).not.toHaveBeenCalled()
+						expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Test File A\n\tLine 18 - Successful\n\tLine 24 - Failed to compile\nTest File B\n\tLine 7 - Did not return a primitive constant\n\tLine 9 - Returned non-assertable primitive type \"test primitive a\": 123\n\tLine 11 - Returned unexpected primitive value of type \"test primitive b\": [4,8,5] whereas \"platform b primitive b assertion pass\" was expected"]]
+				
+			valueTests = ->
+				assertionTests ->
+					it "writes to stderr when the function fails to compile", ->
+						compiler.findFunction.and.callFake (tokenized, input, functionName, logs, logPrefix) ->
+							expect(tokenized).toBe compiler.platforms.platformB
+							expect(tokenized.functions).toEqual "Test Tokenized"
+								
+							expect(input).toEqual "Test Built Parameters"
+							expect(functionName).toEqual "Test FunctionName"
+							if logs
+								expect(logPrefix).toBe ""
+								logs.push "Test Log A"
+								logs.push "Test Log B"
+								logs.push "Test Log C"
+							null
+							
+						compiler.processStderr.write.and.callFake ->
+							expect(compiler.processExit).not.toHaveBeenCalled()						
+							
+						compiler configuration
+						
+						flushCallback()
+						flushCallback()
+						flushCallback()
+						
+						expect(compiler.processExit.calls.allArgs()).toEqual [[1]]
+						expect(compiler.processStdout.write).not.toHaveBeenCalled()
+						expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Failed to compile the input specified as parameters for the function name specified.\nThe log of the pattern matches attempted follows:\nTest Log A\nTest Log B\nTest Log C"]]
 					
-					expect(compiler.processExit).not.toHaveBeenCalled()
-					expect(compiler.processStdout.write).not.toHaveBeenCalled()
-					expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Unexpected error while compiling the source code:"]]					
+					it "writes to stderr and then rethrows when an unexpected exception occurs while compiling", ->
+						compiler.findFunction.and.callFake ->
+							throw "Test Unexpected Exception"
+							
+						compiler.processStderr.write.and.callFake ->
+							expect(compiler.processExit).not.toHaveBeenCalled()						
+							
+						expect ->
+								compiler configuration
+								flushCallback()
+								flushCallback()
+								flushCallback()							
+							.toThrow "Test Unexpected Exception"
+						
+						expect(compiler.processExit).not.toHaveBeenCalled()
+						expect(compiler.processStdout.write).not.toHaveBeenCalled()
+						expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Unexpected error while compiling the source code:"]]					
 				
 			describe "when outputting native code", ->
 				valueTests()
@@ -363,6 +479,118 @@ describe "cli", ->
 					expect(compiler.processExit).not.toHaveBeenCalled()
 					expect(compiler.processStderr.write).not.toHaveBeenCalled()
 					expect(compiler.processStdout.write.calls.allArgs()).toEqual [["Test Serialized Output"]]
+			
+			describe "when outputting assertion results", ->
+				beforeEach ->
+					configuration.mode = "assertionResults"
+				
+				describe "when assertions are disabled", ->
+					it "writes an error message to stderr as we can't output a disabled stage's result", ->							
+						compiler.processStderr.write.and.callFake (param) ->
+							expect(compiler.processExit).not.toHaveBeenCalled()
+						
+						compiler configuration
+						
+						expect(compiler.processStderr.write.calls.allArgs()).toEqual [["Cannot output assertion results when assertions are disabled using -a or --run-assertions"]]
+						expect(compiler.processExit.calls.allArgs()).toEqual [[1]]
+						expect(compiler.processStdout.write).not.toHaveBeenCalled()										
+						
+				describe "when assertions are enabled", ->
+					beforeEach ->
+						configuration.runAssertions = true
+					
+					tokenizeTests()
+					
+					it "writes to stdout on success", ->
+						compiler.runAssertions = (_tokenized) ->
+							expect(_tokenized).toBe compiler.platforms.platformB
+							expect(_tokenized.functions).toEqual "Test Tokenized"
+							return [
+									assertion:
+										line:
+											filename: "Test File A"
+											line: 24
+									resultType: "successful"
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 7
+									resultType: "successful"
+								,
+									assertion:
+										line:
+											filename: "Test File A"
+											line: 18
+									resultType: "successful"
+							]
+						
+						compiler configuration
+						
+						flushCallback()
+						flushCallback()
+						flushCallback()
+						
+						expect(compiler.processExit).not.toHaveBeenCalled()
+						expect(compiler.processStderr.write).not.toHaveBeenCalled()
+						expect(compiler.processStdout.write.calls.allArgs()).toEqual [["Test File A\n\tLine 18 - Successful\n\tLine 24 - Successful\nTest File B\n\tLine 7 - Successful"]]	
+				
+					it "writes to stdout on failure", ->
+						compiler.runAssertions = (_tokenized) ->
+							expect(_tokenized).toBe compiler.platforms.platformB
+							expect(_tokenized.functions).toEqual "Test Tokenized"
+							return [
+									assertion:
+										line:
+											filename: "Test File A"
+											line: 18
+									resultType: "successful"
+								,
+									assertion:
+										line:
+											filename: "Test File A"
+											line: 24
+									resultType: "failedToCompile"
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 7
+									resultType: "didNotReturnPrimitiveConstant"
+									output:
+										parameter:
+											type: "a type"
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 9
+									resultType: "primitiveTypeNotAssertable"
+									output:
+										primitive:
+											type: "test primitive a"
+											value: 123
+								,
+									assertion:
+										line:
+											filename: "Test File B"
+											line: 11
+									resultType: "primitiveValueIncorrect"								
+									output:
+										primitive:
+											type: "test primitive b"
+											value: [4, 8, 5]
+							]
+						
+						compiler configuration
+						
+						flushCallback()
+						flushCallback()
+						flushCallback()
+						
+						expect(compiler.processExit).not.toHaveBeenCalled()
+						expect(compiler.processStderr.write).not.toHaveBeenCalled()
+						expect(compiler.processStdout.write.calls.allArgs()).toEqual [["Test File A\n\tLine 18 - Successful\n\tLine 24 - Failed to compile\nTest File B\n\tLine 7 - Did not return a primitive constant\n\tLine 9 - Returned non-assertable primitive type \"test primitive a\": 123\n\tLine 11 - Returned unexpected primitive value of type \"test primitive b\": [4,8,5] whereas \"platform b primitive b assertion pass\" was expected"]]
 			
 			describe "when outputting tokenized JSON", ->
 				beforeEach ->

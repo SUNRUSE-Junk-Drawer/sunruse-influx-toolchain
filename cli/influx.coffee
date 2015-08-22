@@ -9,7 +9,7 @@ configuration = yargs
 	
 	.alias "m", "mode"
 	.describe "m", "The data to output on success"
-	.choices "m", ["inputJson", "fileJson", "tokenizedJson", "valueJson", "patternMatchingLog", "nativeCode"]
+	.choices "m", ["inputJson", "fileJson", "tokenizedJson", "assertionResults", "valueJson", "patternMatchingLog", "nativeCode"]
 	.default "m", "nativeCode"	
 	.string "m"
 	
@@ -32,6 +32,11 @@ configuration = yargs
 	.alias "t", "tab-size"
 	.default "t", 0
 	.describe "t", "The number of spaces or string to use as tabs.  When zero, no newlines are inserted"
+	
+	.alias "a", "run-assertions"
+	.default "a", true
+	.boolean "a"
+	.describe "a", "When true, all assertions in the specified files are tested before attempting to compile the output"
 	
 	.argv
 
