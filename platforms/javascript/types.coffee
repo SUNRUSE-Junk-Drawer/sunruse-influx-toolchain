@@ -4,7 +4,8 @@ module.exports =
 			.concat (require "./int/comparisons")()
 			.concat (require "./float/arithmetic")()
 			.concat (require "./float/comparisons")()
-			.concat (require "./bool/operators")() 
+			.concat (require "./bool/operators")()
+			.concat (require "./switches")()  
 	primitives: 
 		int:
 			parse: (literal) ->
