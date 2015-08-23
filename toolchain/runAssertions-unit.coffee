@@ -73,7 +73,8 @@ describe "toolchain", ->
 								return true
 				
 				compileExpression = runAssertions.compileExpression
-				runAssertions.compileExpression = (_tokenized, input, expression, funct, log, logPrefix) ->
+				runAssertions.compileExpression = (_tokenized, input, expression, funct, log, logPrefix, cache) ->
+					expect(cache).toEqual {}
 					expect(_tokenized).toBe tokenized
 					expect(input).toEqual
 						score: 0

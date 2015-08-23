@@ -21,7 +21,7 @@ module.exports = (tokenized) ->
 		score: 0
 		properties: {}
 	for funct in tokenized.functions when funct.name is "assert"
-		result = module.exports.compileExpression tokenized, emptyProperties, funct.declarations.output, funct
+		result = module.exports.compileExpression tokenized, emptyProperties, funct.declarations.output, funct, null, null, {}
 		if not result 
 			resultType: "failedToCompile"
 			assertion: funct

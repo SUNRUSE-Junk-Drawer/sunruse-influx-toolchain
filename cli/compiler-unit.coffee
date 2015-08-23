@@ -76,11 +76,12 @@ describe "cli", ->
 							callback: callback
 							
 				spyOn compiler, "findFunction"
-					.and.callFake (tokenized, input, functionName, logs, logPrefix) ->
+					.and.callFake (tokenized, input, functionName, logs, logPrefix, cache) ->
 						expect(tokenized).toBe compiler.platforms.platformB
 						expect(tokenized.functions).toEqual "Test Tokenized"
 						expect(input).toEqual "Test Built Parameters"
 						expect(functionName).toEqual "Test FunctionName"
+						expect(cache).toEqual {}
 						if logs
 							expect(logPrefix).toBe ""
 							logs.push "Test Log A"

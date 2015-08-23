@@ -106,7 +106,7 @@ module.exports = (configuration) ->
 													errorred = false
 													logs = []
 													try
-														output = module.exports.findFunction platform, input, configuration.functionName, logs, ""
+														output = module.exports.findFunction platform, input, configuration.functionName, logs, "", {}
 													catch error
 														module.exports.processStderr.write "Unexpected error while compiling the source code:"
 														throw error
