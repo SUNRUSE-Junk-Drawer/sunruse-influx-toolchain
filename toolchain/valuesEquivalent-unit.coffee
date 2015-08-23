@@ -38,7 +38,8 @@ describe "valuesEquivalent", ->
 					.toBeFalsy()
 			it "returns falsy when properties fail to match", ->
 				spyOn valuesEquivalent, "valuesEquivalent"
-					.and.callFake (a, b) ->
+					.and.callFake (_tokenized, a, b) ->
+						expect(_tokenized).toBe tokenized
 						switch a
 							when "Test Property AA"
 								expect(b).toEqual "Test Property BA"
@@ -50,7 +51,8 @@ describe "valuesEquivalent", ->
 					.toBeFalsy()
 			it "returns truthy when all properties exist in both and match", ->
 				spyOn valuesEquivalent, "valuesEquivalent"
-					.and.callFake (a, b) ->
+					.and.callFake (_tokenized, a, b) ->
+						expect(_tokenized).toBe tokenized
 						switch a
 							when "Test Property AA"
 								expect(b).toEqual "Test Property BA"

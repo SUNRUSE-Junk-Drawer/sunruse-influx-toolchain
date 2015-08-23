@@ -18,7 +18,7 @@ module.exports = (tokenized, a, b) ->
 		for name of b.properties
 			if not a.properties[name] then return	
 		for name of a.properties
-			if not module.exports.valuesEquivalent a.properties[name], b.properties[name] then return
+			if not module.exports.valuesEquivalent tokenized, a.properties[name], b.properties[name] then return
 		return true
 	if a.primitive
 		if not b.primitive then return
