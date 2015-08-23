@@ -1,0 +1,51 @@
+{
+  "name": "sunruse.influx",
+  "version": "0.0.0",
+  "description": "A constant time, loosely-then-statically typed, purely functional programming language.",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "file": "^0.2.2",
+    "grunt": "^0.4.5",
+    "grunt-contrib-coffee": "^0.13.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.8.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jasmine-nodejs": "^1.4.3",
+    "grunt-webpack": "^1.0.11",
+    "jasmine-collection-matchers": "^0.0.10",
+    "rewire": "^2.3.4",
+    "webpack": "^1.11.0",
+    "yargs": "^3.21.0",
+    "webpack-dev-server": "^1.10.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "grunt build test",
+    "prepublish": "grunt build test deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jameswilddev/SUNRUSE.influx.git"
+  },
+  "keywords": [
+    "sunruse",
+    "influx",
+    "programming",
+    "language",
+    "runtime",
+    "purely",
+    "pure",
+    "functional",
+    "constant",
+    "time"
+  ],
+  "author": "SUNRUSE",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jameswilddev/SUNRUSE.influx/issues"
+  },
+  "homepage": "https://github.com/jameswilddev/SUNRUSE.influx#readme"
+}
