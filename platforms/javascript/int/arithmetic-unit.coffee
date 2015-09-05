@@ -114,6 +114,7 @@ describe "platforms", ->
 									b: "Test Input B"	
 							expect unorderedBinaries.multiply.args[4] "Test Tokenized", "Test Cache", input
 								.toEqual "(Test Code A) * (Test Code B)"
+								
 					describe "divide", ->
 						it "is returned", ->
 							divide = (func for func in functions when func.name is "divide")
@@ -121,8 +122,11 @@ describe "platforms", ->
 							expect(divide[0]).toBe orderedBinaries.divide.result
 							expect orderedBinaries.divide.args
 								.toEqual ["divide", "int", "int", (jasmine.any Function), (jasmine.any Function)]
+
+						it "supports constant inputs rounding down", ->
+							expect(orderedBinaries.divide.args[3] 64, 3).toEqual 21	
 						
-						it "supports constant inputs", ->
+						it "supports constant inputs rounding up", ->
 							expect(orderedBinaries.divide.args[3] 65, 3).toEqual 22	
 						
 						it "supports native code generation", ->
@@ -131,7 +135,52 @@ describe "platforms", ->
 									a: "Test Input A"
 									b: "Test Input B"	
 							expect orderedBinaries.divide.args[4] "Test Tokenized", "Test Cache", input
-								.toEqual "Math.round((Test Code A) / (Test Code B))"												
+								.toEqual "Math.round((Test Code A) / (Test Code B))"											
+
+					describe "divideDown", ->
+						it "is returned", ->
+							divideDown = (func for func in functions when func.name is "divideDown")
+							expect(divideDown.length).toEqual 1
+							expect(divideDown[0]).toBe orderedBinaries.divideDown.result
+							expect orderedBinaries.divideDown.args
+								.toEqual ["divideDown", "int", "int", (jasmine.any Function), (jasmine.any Function)]
+
+						it "supports constant inputs rounding down", ->
+							expect(orderedBinaries.divideDown.args[3] 64, 3).toEqual 21	
+						
+						it "supports constant inputs rounding up", ->
+							expect(orderedBinaries.divideDown.args[3] 65, 3).toEqual 21
+						
+						it "supports native code generation", ->
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect orderedBinaries.divideDown.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "Math.floor((Test Code A) / (Test Code B))"											
+								
+					describe "divideUp", ->
+						it "is returned", ->
+							divideUp = (func for func in functions when func.name is "divideUp")
+							expect(divideUp.length).toEqual 1
+							expect(divideUp[0]).toBe orderedBinaries.divideUp.result
+							expect orderedBinaries.divideUp.args
+								.toEqual ["divideUp", "int", "int", (jasmine.any Function), (jasmine.any Function)]
+
+						it "supports constant inputs rounding down", ->
+							expect(orderedBinaries.divideUp.args[3] 64, 3).toEqual 22
+						
+						it "supports constant inputs rounding up", ->
+							expect(orderedBinaries.divideUp.args[3] 65, 3).toEqual 22
+						
+						it "supports native code generation", ->
+							input = 
+								properties:
+									a: "Test Input A"
+									b: "Test Input B"	
+							expect orderedBinaries.divideUp.args[4] "Test Tokenized", "Test Cache", input
+								.toEqual "Math.ceil((Test Code A) / (Test Code B))"											
+									
 					describe "negate", ->
 						it "is returned", ->
 							negate = (func for func in functions when func.name is "negate")

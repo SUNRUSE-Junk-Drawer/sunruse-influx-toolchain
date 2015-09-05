@@ -104,6 +104,8 @@ The following functions are natively implemented by default:
 * multiply a int, b int -> int
 * multiply a float, b float -> float
 * divide a int, b int -> int
+* divideUp a int, b int -> int
+* divideDown a int, b int -> int
 * divide a float, b float -> float
 * negate int -> int
 * negate float -> float
