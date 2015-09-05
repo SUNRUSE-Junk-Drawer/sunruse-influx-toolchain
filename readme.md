@@ -126,6 +126,7 @@ The following functions are natively implemented by default:
 * switch a, b, on bool -> anything
 * sqrt float -> float
 * pow base float, exp float -> float
+* log float -> float
 * sin float -> float
 * cos float -> float
 * tan float -> float
