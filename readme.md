@@ -125,6 +125,7 @@ The following functions are natively implemented by default:
 * xor a bool, b bool -> bool
 * switch a, b, on bool -> anything
 * sqrt float -> float
+* pow base int, exp int -> int
 * pow base float, exp float -> float
 * log float -> float
 * sin float -> float
