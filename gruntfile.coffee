@@ -5,43 +5,86 @@ module.exports = (grunt) ->
             "grunt-contrib-clean"
             "grunt-contrib-copy"
             "grunt-jasmine-nodejs"
+            "grunt-concurrent"
         ]
         
-    grunt.registerTask "build", ["clean:build", "coffee"]
-    grunt.registerTask "test", ["jasmine_nodejs:unit", "jasmine_nodejs:selftest", "jasmine_nodejs:integration"]
-    grunt.registerTask "deploy", ["clean:deploy", "copy:deploy"]
+    grunt.registerTask "buildToolchain", ["clean:toolchainBuild", "coffee:toolchain"]
+    grunt.registerTask "testToolchain", ["jasmine_nodejs:toolchain"]
+    grunt.registerTask "deployToolchain", ["clean:toolchainDeploy", "copy:toolchain"]
+    
+    grunt.registerTask "buildPlatforms", ["clean:platformsBuild", "coffee:platforms"]
+    grunt.registerTask "testPlatforms", ["jasmine_nodejs:platformsUnit", "jasmine_nodejs:platformsIntegration"]
+    grunt.registerTask "deployPlatforms", ["clean:platformsDeploy", "copy:platforms"]
+    
+    grunt.registerTask "testLibraries", ["jasmine_nodejs:runAssertions"]
+    
+    grunt.registerTask "build", ["buildToolchain", "buildPlatforms"]
+    grunt.registerTask "test", ["testToolchain", "testPlatforms", "testLibraries"]
+    grunt.registerTask "deploy", ["deployToolchain", "deployPlatforms"]
         
     grunt.initConfig
+        clean:
+            toolchainBuild: "build/toolchain"
+            toolchainDeploy: "deploy/toolchain"
+            platformsBuild: "build/platforms"
+            platformsDeploy: "deploy/platforms"
         jasmine_nodejs:
             options:
                 specNameSuffix: ".js"
-            unit: 
-                specs: ["**/*-unit.js"]
-            selftest:
+                reporters:
+                    console:
+                        verbosity: 0
+            toolchain: 
+                specs: ["build/toolchain/**/*-unit.js"]
+            platformsUnit: 
+                specs: ["build/platforms/**/*-unit.js"]
+            platformsIntegration: 
+                specs: ["build/platforms/**/*-integration.js"]
+            runAssertions: 
                 specs: ["build/toolchain/selftest.js"]
-            integration: 
-                specs: ["**/*-integration.js"]
-        clean:
-            build: "build"
-            deploy: "deploy"
         copy:
-            deploy:
+            toolchain:
                 files: [
                     expand: true
-                    cwd: "build"
-                    src: ["**/*.js", "!**/*-unit.js", "!toolchain/selftest.js", "!**/*-integration.js"]
-                    dest: "deploy"
+                    cwd: "build/toolchain"
+                    src: ["**/*.js", "!**/*-unit.js"]
+                    dest: "deploy/toolchain"
+                ]
+            platforms:
+                files: [
+                    expand: true
+                    cwd: "build/platforms"
+                    src: ["**/*.js", "!**/*-unit.js"]
+                    dest: "deploy/platforms"
                 ]
         coffee:
-            config:
+            toolchain:
                 files: [
                         expand: true
-                        src: ["toolchain/**/*.coffee", "platforms/**/*.coffee", "cli/**/*.coffee"]
+                        src: ["toolchain/**/*.coffee"]
+                        dest: "build"
+                        ext: ".js"
+                ]
+            platforms:
+                files: [
+                        expand: true
+                        src: ["platforms/**/*.coffee"]
                         dest: "build"
                         ext: ".js"
                 ]
         watch:
+            toolchain:
+                options:
+                    atBegin: true
+                files: ["toolchain/**/*"]
+                tasks: ["buildToolchain", "testToolchain", "deployToolchain"]
+            platforms:
+                files: ["deploy/toolchain/**/*", "platforms/**/*"]
+                tasks: ["buildPlatforms", "testPlatforms", "deployPlatforms"]
+            libraries:
+                files: ["deploy/platforms/**/*", "libraries/**/*"]
+                tasks: ["testLibraries"]
+        concurrent:
             options:
-                atBegin: true
-            files: ["/gruntfile.coffee", "toolchain/**/*", "platforms/**/*", "cli/**/*", "libraries/**/*", "examples/**/*"]
-            tasks: ["build", "test", "deploy"]
+                logConcurrentOutput: true
+            tasks: ["watch:toolchain", "watch:platforms", "watch:libraries"]
