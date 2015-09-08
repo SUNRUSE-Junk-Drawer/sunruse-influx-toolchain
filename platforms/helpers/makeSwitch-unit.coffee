@@ -171,7 +171,6 @@ describe "platforms", ->
 					beforeEach ->
 						makeSwitch.valuesEquivalent = (tokenized, a, b) ->
 							expect(tokenized).toEqual "Test Tokenized"
-							console.log a + " vs " + b
 							switch a
 								when "Test Input AA" then return b is "Test Input BA"
 								when "Test Input AB" then return b is "Test Input BB"
