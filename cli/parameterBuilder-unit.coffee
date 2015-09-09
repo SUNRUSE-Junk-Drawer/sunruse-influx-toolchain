@@ -288,14 +288,14 @@ describe "cli", ->
 					parameter: "a>testPrimitiveE"												
 		it "throws an exception when a root primitive literal/name cannot be resolved", ->
 			expect ->
-					parameterBuilder tokenized, ["Unknown Token"]
+					parameterBuilder platform, ["Unknown Token"]
 				.toThrow
 					reason: "primitiveTypeOrLiteralUnrecognized"
 					chain: []
 					type: "Unknown Token"												
 		it "throws an exception when a nested primitive literal/name cannot be resolved", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Unknown Token"]
+					parameterBuilder platform, ["a>Unknown Token"]
 				.toThrow
 					reason: "primitiveTypeOrLiteralUnrecognized"
 					chain: ["a"]
