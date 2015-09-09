@@ -50,8 +50,8 @@ describe "platforms", ->
 						arithmetic.makeOrderedBinary = makeOrderedBinary
 						arithmetic.makeUnorderedBinary = makeUnorderedBinary						
 						
-						arithmetic.codeCache = (tokenized, cache, value) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						arithmetic.codeCache = (platform, cache, value) ->
+							expect(platform).toEqual "Test Platform"
 							expect(cache).toEqual "Test Cache"
 							switch value
 								when "Test Input" then return "Test Code"
@@ -76,7 +76,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.add.args[4] "Test Tokenized", "Test Cache", input
+							expect unorderedBinaries.add.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) + (Test Code B)"
 					describe "subtract", ->
 						it "is returned", ->
@@ -94,7 +94,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.subtract.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.subtract.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) - (Test Code B)"						
 					describe "multiply", ->
 						it "is returned", ->
@@ -112,7 +112,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.multiply.args[4] "Test Tokenized", "Test Cache", input
+							expect unorderedBinaries.multiply.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) * (Test Code B)"
 								
 					describe "divide", ->
@@ -134,7 +134,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.divide.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.divide.args[4] "Test Platform", "Test Cache", input
 								.toEqual "Math.round((Test Code A) / (Test Code B))"											
 
 					describe "divideDown", ->
@@ -156,7 +156,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.divideDown.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.divideDown.args[4] "Test Platform", "Test Cache", input
 								.toEqual "Math.floor((Test Code A) / (Test Code B))"											
 								
 					describe "divideUp", ->
@@ -178,7 +178,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.divideUp.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.divideUp.args[4] "Test Platform", "Test Cache", input
 								.toEqual "Math.ceil((Test Code A) / (Test Code B))"											
 									
 					describe "negate", ->
@@ -193,5 +193,5 @@ describe "platforms", ->
 							expect(unaries.negate.args[3] 65).toEqual -65
 						
 						it "supports native code generation", ->
-							expect unaries.negate.args[4] "Test Tokenized", "Test Cache", "Test Input"
+							expect unaries.negate.args[4] "Test Platform", "Test Cache", "Test Input"
 								.toEqual "-(Test Code)"																		

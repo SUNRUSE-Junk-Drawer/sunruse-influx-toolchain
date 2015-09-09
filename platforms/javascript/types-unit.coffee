@@ -32,8 +32,8 @@ describe "platforms", ->
 							{}
 					]
 				
-				types.resultGenerator = (tokenized, _cache, output) ->
-					expect(tokenized).toEqual "Test Tokenized"
+				types.resultGenerator = (platform, _cache, output) ->
+					expect(platform).toEqual "Test Platform"
 					expect(_cache).toBe cache 
 					expect(output).toEqual "Test Output"
 					cache.push {}
@@ -46,7 +46,7 @@ describe "platforms", ->
 						Test Return Line B
 					"""
 				
-				result = types.compile "Test Tokenized", "Test Input", "Test Output"
+				result = types.compile "Test Platform", "Test Input", "Test Output"
 				
 				expect(result).toEqual 	"""
 					Test Return Line A
@@ -68,8 +68,8 @@ describe "platforms", ->
 							{}
 					]
 				
-				types.resultGenerator = (tokenized, _cache, output) ->
-					expect(tokenized).toEqual "Test Tokenized"
+				types.resultGenerator = (platform, _cache, output) ->
+					expect(platform).toEqual "Test Platform"
 					expect(_cache).toBe cache 
 					expect(output).toEqual "Test Output"
 					cache.push
@@ -85,7 +85,7 @@ describe "platforms", ->
 						Test Return Line B
 					"""
 				
-				result = types.compile "Test Tokenized", "Test Input", "Test Output"
+				result = types.compile "Test Platform", "Test Input", "Test Output"
 				
 				expect(result).toEqual 	"""
 					Test Pre-Existing Working A

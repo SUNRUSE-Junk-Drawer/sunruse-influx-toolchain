@@ -28,13 +28,13 @@ describe "platforms", ->
 					expect(instance.generateCode).toEqual "Test GenerateCode"
 				describe "inputsEqual", ->
 					it "defers to valuesEquivalent", ->
-						makeUnary.valuesEquivalent.and.callFake (tokenized, a, b) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						makeUnary.valuesEquivalent.and.callFake (platform, a, b) ->
+							expect(platform).toEqual "Test Platform"
 							expect(a).toEqual "Test Input A"
 							expect(b).toEqual "Test Input B"
 							"Test Result"
 							
-						expect instance.inputsEqual "Test Tokenized", "Test Input A", "Test Input B"
+						expect instance.inputsEqual "Test Platform", "Test Input A", "Test Input B"
 							.toEqual "Test Result" 
 				describe "compile", ->
 					describe "when the input is not a primitive", ->

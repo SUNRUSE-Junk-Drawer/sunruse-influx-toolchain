@@ -31,8 +31,8 @@ module.exports = (name, inputType, outputType, forConstants, generateCode) ->
 							properties:
 								a: value.properties.a
 								b: value.properties.b
-		inputsEqual: (tokenized, a, b) ->
-			(module.exports.valuesEquivalent tokenized, a.properties.a, b.properties.a) and (module.exports.valuesEquivalent tokenized, a.properties.b, b.properties.b)
+		inputsEqual: (platform, a, b) ->
+			(module.exports.valuesEquivalent platform, a.properties.a, b.properties.a) and (module.exports.valuesEquivalent platform, a.properties.b, b.properties.b)
 		generateCode: generateCode
 module.exports.valueIsPrimitive = require "./../../toolchain/valueIsPrimitive"
 module.exports.valuesEquivalent = require "./../../toolchain/valuesEquivalent"

@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized types.
+#	The platform instance.
 #	An array of objects describing previously compiled native code:
 #		code: String containing code to use when referencing this value.
 #		value: The value object code was generated for.
@@ -15,7 +15,7 @@
 #		of previously compiled native code as the first argument and the input
 #		as the second.  The result is then stored in a new object in the array.
 #	If none of these conditions pass, falsy.
-module.exports = (tokenized, cache, value) ->
+module.exports = (platform, cache, value) ->
 	if value.primitive
 		switch value.primitive.type
 			when "int" then return "" + value.primitive.value
@@ -25,10 +25,10 @@ module.exports = (tokenized, cache, value) ->
 				if Number.isInteger value.primitive.value then temp += ".0"
 				return temp
 	for cached in cache
-		if module.exports.valuesEquivalent tokenized, cached.value, value
+		if module.exports.valuesEquivalent platform, cached.value, value
 			return cached.code
 	if value.native
-		generated = value.native.function.generateCode tokenized, cache, value.native.input
+		generated = value.native.function.generateCode platform, cache, value.native.input
 		greatest = 0
 		for existing in cache
 			if existing.value.native then greatest++

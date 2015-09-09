@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized functions.
+#	The platform instance.
 #	The input value object.
 #	An expression object.
 #	The function containing the expression.
@@ -11,17 +11,17 @@
 # Returns:
 #	When the expression does not compile, falsy.
 #	When the expression compiles, the value object generated is returned.
-module.exports = (tokenized, input, expression, funct, log, logPrefix, cache) ->
+module.exports = (platform, input, expression, funct, log, logPrefix, cache) ->
 	if expression.chain
 		if log
 			chain = []
 			for token in expression.chain
 				chain.push token.token
 			log.push logPrefix + "Attempting to compile chain \"" + (chain.join " ") + "\"..."
-		value = module.exports.getValue tokenized, input, expression.chain[0].token, funct, log, logPrefix + "\t", cache
+		value = module.exports.getValue platform, input, expression.chain[0].token, funct, log, logPrefix + "\t", cache
 		for func in [1 ... expression.chain.length]
 			if not value then return null
-			value = module.exports.findFunction tokenized, value, expression.chain[func].token, log, logPrefix + "\t", cache
+			value = module.exports.findFunction platform, value, expression.chain[func].token, log, logPrefix + "\t", cache
 		if log and value
 			log.push logPrefix + "\tSuccessfully compiled chain."
 		value
@@ -34,7 +34,7 @@ module.exports = (tokenized, input, expression, funct, log, logPrefix, cache) ->
 		for property of expression.properties
 			if log
 				log.push logPrefix + "Attempting to compile property \"" + property + "\"..."
-			value = module.exports.compileExpression tokenized, input, expression.properties[property], funct, log, logPrefix + "\t", cache
+			value = module.exports.compileExpression platform, input, expression.properties[property], funct, log, logPrefix + "\t", cache
 			if not value then return null
 			output.properties[property] = value
 			output.score += value.score

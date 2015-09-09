@@ -22,8 +22,8 @@ describe "platforms", ->
 					cache = [existingA, existingB, existingC]
 					valuesEquivalent = codeCache.valuesEquivalent
 					codeCache.valuesEquivalent = jasmine.createSpy()
-					codeCache.valuesEquivalent.and.callFake (tokenized, a, b) ->
-						expect(tokenized).toBe "Test Tokenized"
+					codeCache.valuesEquivalent.and.callFake (platform, a, b) ->
+						expect(platform).toBe "Test Platform"
 						if a is "Existing B" and b is "Test Matchable" then return true
 						if b is "Existing B" and a is "Test Matchable" then return true
 				afterEach ->
@@ -38,7 +38,7 @@ describe "platforms", ->
 					describe "int", ->
 						describe "zero", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 										primitive:
 											type: "int",
 											value: 0
@@ -47,7 +47,7 @@ describe "platforms", ->
 							doesNotModify()
 						describe "negative", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 										primitive:
 											type: "int",
 											value: -34
@@ -56,7 +56,7 @@ describe "platforms", ->
 							doesNotModify()							
 						describe "positive", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 										primitive:
 											type: "int",
 											value: 72
@@ -66,7 +66,7 @@ describe "platforms", ->
 					describe "float", ->
 						describe "zero", ->
 							it "returns the value as a string", ->
-								expect codeCache "Test Tokenized", cache, 
+								expect codeCache "Test Platform", cache, 
 										primitive:
 											type: "float",
 											value: 0.0
@@ -74,7 +74,7 @@ describe "platforms", ->
 							doesNotModify()
 						describe "negative", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 									primitive:
 										type: "float",
 										value: -3.42
@@ -83,7 +83,7 @@ describe "platforms", ->
 							doesNotModify()							
 						describe "positive", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 									primitive:
 										type: "float",
 										value: 7.45
@@ -93,7 +93,7 @@ describe "platforms", ->
 					describe "bool", ->
 						describe "false", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 									primitive:
 										type: "bool",
 										value: false								
@@ -102,7 +102,7 @@ describe "platforms", ->
 							doesNotModify()
 						describe "negative", ->
 							beforeEach ->
-								result = codeCache "Test Tokenized", cache, 
+								result = codeCache "Test Platform", cache, 
 									primitive:
 										type: "bool",
 										value: true
@@ -111,7 +111,7 @@ describe "platforms", ->
 							doesNotModify()							
 				describe "when calling with a previously generated value object", ->
 					beforeEach ->
-						result = codeCache "Test Tokenized", cache, "Test Matchable"
+						result = codeCache "Test Platform", cache, "Test Matchable"
 					it "returns the previously generated value object's code", ->
 						expect(result).toEqual "Test Code B"
 					doesNotModify()			
@@ -133,13 +133,13 @@ describe "platforms", ->
 							input = 							
 								native:
 									function:
-										generateCode: (tokenized, cached, value) ->
-											expect(tokenized).toEqual "Test Tokenized"
+										generateCode: (platform, cached, value) ->
+											expect(platform).toEqual "Test Platform"
 											expect(cached).toBe cache
 											expect(value).toEqual "Test Input"
 											"Test Generated Code"
 									input: "Test Input"
-							result = codeCache "Test Tokenized", cache, input
+							result = codeCache "Test Platform", cache, input
 						it "returns the generated code", ->
 							expect(result).toEqual "temp_0"
 						it "adds a reference to the generated code to the cached code", ->
@@ -160,13 +160,13 @@ describe "platforms", ->
 							input = 							
 								native:
 									function:
-										generateCode: (tokenized, cached, value) ->
-											expect(tokenized).toEqual "Test Tokenized"
+										generateCode: (platform, cached, value) ->
+											expect(platform).toEqual "Test Platform"
 											expect(cached).toBe cache
 											expect(value).toEqual "Test Input"
 											"Test Generated Code"
 									input: "Test Input"
-							result = codeCache "Test Tokenized", cache, input
+							result = codeCache "Test Platform", cache, input
 						it "returns the generated code", ->
 							expect(result).toEqual "temp_2"
 						it "adds a reference to the generated code to the cached code", ->
@@ -183,8 +183,8 @@ describe "platforms", ->
 							input = 							
 								native:
 									function:
-										generateCode: (tokenized, cached, value) ->
-											expect(tokenized).toEqual "Test Tokenized"
+										generateCode: (platform, cached, value) ->
+											expect(platform).toEqual "Test Platform"
 											expect(cached).toBe cache
 											expect(value).toEqual "Test Input"
 											if firstTime
@@ -193,7 +193,7 @@ describe "platforms", ->
 												firstTime = false
 											"Test Generated Code"
 									input: "Test Input"
-							result = codeCache "Test Tokenized", cache, input
+							result = codeCache "Test Platform", cache, input
 						it "returns the generated code", ->
 							expect(result).toEqual "temp_1"
 						it "adds a reference to the generated code to the cached code", ->
@@ -216,8 +216,8 @@ describe "platforms", ->
 							input = 							
 								native:
 									function:
-										generateCode: (tokenized, cached, value) ->
-											expect(tokenized).toEqual "Test Tokenized"
+										generateCode: (platform, cached, value) ->
+											expect(platform).toEqual "Test Platform"
 											expect(cached).toBe cache
 											expect(value).toEqual "Test Input"
 											if firstTime
@@ -226,7 +226,7 @@ describe "platforms", ->
 												firstTime = false											
 											"Test Generated Code"
 									input: "Test Input"
-							result = codeCache "Test Tokenized", cache, input
+							result = codeCache "Test Platform", cache, input
 						it "returns the generated code", ->
 							expect(result).toEqual "temp_3"
 						it "adds a reference to the generated code to the cached code", ->

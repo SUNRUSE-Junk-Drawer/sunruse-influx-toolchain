@@ -169,8 +169,8 @@ describe "platforms", ->
 										expect(result.native.input.properties.on).toBe input.properties.on
 				describe "inputsEqual", ->
 					beforeEach ->
-						makeSwitch.valuesEquivalent = (tokenized, a, b) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						makeSwitch.valuesEquivalent = (platform, a, b) ->
+							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA" then return b is "Test Input BA"
 								when "Test Input AB" then return b is "Test Input BB"
@@ -186,7 +186,7 @@ describe "platforms", ->
 								a: "Test Input BA"
 								b: "Test Input BB"
 								on: "Test Input BO"
-						expect instance.inputsEqual "Test Tokenized", a, b
+						expect instance.inputsEqual "Test Platform", a, b
 							.toBeTruthy()
 					it "returns falsy when \"a\" does not match", ->
 						a = 
@@ -199,7 +199,7 @@ describe "platforms", ->
 								a: "Test Input BA"
 								b: "Test Input BB"
 								on: "Test Input BO"
-						expect instance.inputsEqual "Test Tokenized", a, b
+						expect instance.inputsEqual "Test Platform", a, b
 							.toBeFalsy()						
 					it "returns falsy when \"b\" does not match", ->
 						a = 
@@ -212,7 +212,7 @@ describe "platforms", ->
 								a: "Test Input BA"
 								b: "Test Input B?"
 								on: "Test Input BO"
-						expect instance.inputsEqual "Test Tokenized", a, b
+						expect instance.inputsEqual "Test Platform", a, b
 							.toBeFalsy()						
 					it "returns falsy when \"on\" does not match", ->
 						a = 
@@ -225,5 +225,5 @@ describe "platforms", ->
 								a: "Test Input BA"
 								b: "Test Input BB"
 								on: "Test Input BO"
-						expect instance.inputsEqual "Test Tokenized", a, b
+						expect instance.inputsEqual "Test Platform", a, b
 							.toBeFalsy()					

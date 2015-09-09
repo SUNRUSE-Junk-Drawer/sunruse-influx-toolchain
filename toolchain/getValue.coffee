@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized functions.
+#	The platform instance.
 #	The input value object.
 #	A string containing the starting value of an expression.
 #	The function containing the expression.
@@ -16,13 +16,13 @@
 #	When the starting value is the name of a temporary variable, the result of
 #	compileExpression for that temporary variable. 
 
-module.exports = (tokenized, input, token, funct, log, logPrefix, cache) ->
+module.exports = (platform, input, token, funct, log, logPrefix, cache) ->
 	if token is "input"
 		if log
 			log.push logPrefix + "Initial value is the input." 
 		return input
-	for primitive of tokenized.primitives
-		value = tokenized.primitives[primitive].parse token
+	for primitive of platform.primitives
+		value = platform.primitives[primitive].parse token
 		if value isnt undefined
 			if log
 				log.push logPrefix + "Initial value is the literal \"" + token + "\" of primitive type \"" + primitive + "\"." 
@@ -34,7 +34,7 @@ module.exports = (tokenized, input, token, funct, log, logPrefix, cache) ->
 	if funct.declarations[token]
 		if log
 			log.push logPrefix + "Attempting to compile declaration \"" + token + "\"..." 
-		return module.exports.compileExpression tokenized, input, funct.declarations[token], funct, log, logPrefix + "\t", cache
+		return module.exports.compileExpression platform, input, funct.declarations[token], funct, log, logPrefix + "\t", cache
 	if log
 		log.push logPrefix + "Failed to resolve initial value \"" + token + "\"." 
 	return

@@ -1,9 +1,9 @@
 describe "cli", ->
 	describe "parameterBuilder", ->
-		parameterBuilder = tokenized = undefined
+		parameterBuilder = platform = undefined
 		beforeEach ->
 			parameterBuilder = require "./parameterBuilder"
-			tokenized = 
+			platform = 
 				primitives:
 					testPrimitiveA: 
 						parse: (token) ->
@@ -31,26 +31,26 @@ describe "cli", ->
 								NaN						
 							
 		it "returns an empty properties object when no parameters are given", ->
-			expect parameterBuilder tokenized, []
+			expect parameterBuilder platform, []
 				.toEqual 
 					score: 0
 					properties: {}
 					
 		it "returns an empty properties object when falsy parameters are given", ->
-			expect parameterBuilder tokenized, null
+			expect parameterBuilder platform, null
 				.toEqual 
 					score: 0
 					properties: {}
 					
 		it "returns a primitive parameter when only a type is given", ->
-			expect parameterBuilder tokenized, ["testPrimitiveC"]
+			expect parameterBuilder platform, ["testPrimitiveC"]
 				.toEqual 
 					score: 1
 					parameter:
 						type: "testPrimitiveC"
 						
 		it "returns a primitive constant when only a literal is given for a value of false", ->
-			expect parameterBuilder tokenized, ["Test Literal A"]
+			expect parameterBuilder platform, ["Test Literal A"]
 				.toEqual 
 					score: 1
 					primitive:
@@ -58,7 +58,7 @@ describe "cli", ->
 						value: false
 						
 		it "returns a primitive constant when only a literal is given for a truthy value", ->
-			expect parameterBuilder tokenized, ["Test Literal B"]
+			expect parameterBuilder platform, ["Test Literal B"]
 				.toEqual 
 					score: 1
 					primitive:
@@ -66,7 +66,7 @@ describe "cli", ->
 						value: "Test Primitive"
 						
 		it "returns a primitive constant when only a literal is given for a value of zero", ->
-			expect parameterBuilder tokenized, ["Test Literal C"]
+			expect parameterBuilder platform, ["Test Literal C"]
 				.toEqual 
 					score: 1
 					primitive:
@@ -74,7 +74,7 @@ describe "cli", ->
 						value: 0						
 						
 		it "returns a primitive constant when only a literal is given for a value of null", ->
-			expect parameterBuilder tokenized, ["Test Literal D"]
+			expect parameterBuilder platform, ["Test Literal D"]
 				.toEqual 
 					score: 1
 					primitive:
@@ -82,7 +82,7 @@ describe "cli", ->
 						value: null						
 						
 		it "returns a primitive constant when only a literal is given for a value of \"\"", ->
-			expect parameterBuilder tokenized, ["Test Literal E"]
+			expect parameterBuilder platform, ["Test Literal E"]
 				.toEqual 
 					score: 1
 					primitive:
@@ -90,7 +90,7 @@ describe "cli", ->
 						value: ""						
 						
 		it "returns a primitive constant when only a literal is given for a value of NaN", ->
-			expect parameterBuilder tokenized, ["Test Literal F"]
+			expect parameterBuilder platform, ["Test Literal F"]
 				.toEqual 
 					score: 1
 					primitive:
@@ -98,7 +98,7 @@ describe "cli", ->
 						value: NaN						
 						
 		it "returns a properties object when properties specified", ->
-			expect parameterBuilder tokenized, ["a>Test Literal B", "b>testPrimitiveE"]
+			expect parameterBuilder platform, ["a>Test Literal B", "b>testPrimitiveE"]
 				.toEqual 
 					score: 2
 					properties:
@@ -113,7 +113,7 @@ describe "cli", ->
 								type: "testPrimitiveE"
 								
 		it "returns a properties object when nested properties are specified", ->
-			expect parameterBuilder tokenized, ["a>Test Literal B", "b>testPrimitiveE", "c>nestedA>testPrimitiveF", "c>nestedB>nestedBA>testPrimitiveB", "c>nestedB>nestedBB>Test Literal D"]
+			expect parameterBuilder platform, ["a>Test Literal B", "b>testPrimitiveE", "c>nestedA>testPrimitiveF", "c>nestedB>nestedBA>testPrimitiveB", "c>nestedB>nestedBB>Test Literal D"]
 				.toEqual 
 					score: 5
 					properties:
@@ -148,140 +148,140 @@ describe "cli", ->
 
 		it "throws an exception when replacing a root properties object with a root primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal B", "b>testPrimitiveE", "Test Literal D"]
+					parameterBuilder platform, ["a>Test Literal B", "b>testPrimitiveE", "Test Literal D"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "Test Literal D"
 		it "throws an exception when replacing a root properties object with a root parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal B", "b>testPrimitiveE", "testPrimitiveD"]
+					parameterBuilder platform, ["a>Test Literal B", "b>testPrimitiveE", "testPrimitiveD"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "testPrimitiveD"													
 		it "throws an exception when replacing a root primitive with properties", ->
 			expect ->
-					parameterBuilder tokenized, ["Test Literal B", "a>testPrimitiveC"]
+					parameterBuilder platform, ["Test Literal B", "a>testPrimitiveC"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "a>testPrimitiveC"													
 		it "throws an exception when replacing a root primitive with a root primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["Test Literal B", "Test Literal C"]
+					parameterBuilder platform, ["Test Literal B", "Test Literal C"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "Test Literal C"										
 		it "throws an exception when replacing a root primitive with a root parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["Test Literal B", "testPrimitiveC"]
+					parameterBuilder platform, ["Test Literal B", "testPrimitiveC"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "testPrimitiveC"										
 		it "throws an exception when replacing a root parameter with properties", ->
 			expect ->
-					parameterBuilder tokenized, ["testPrimitiveC", "a>testPrimitiveB"]
+					parameterBuilder platform, ["testPrimitiveC", "a>testPrimitiveB"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "a>testPrimitiveB"													
 		it "throws an exception when replacing a root parameter with a root primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["testPrimitiveC", "Test Literal D"]
+					parameterBuilder platform, ["testPrimitiveC", "Test Literal D"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "Test Literal D"																
 		it "throws an exception when replacing a root parameter with a root parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["testPrimitiveC", "testPrimitiveE"]
+					parameterBuilder platform, ["testPrimitiveC", "testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "testPrimitiveE"					
 		it "throws an exception when replacing a nested properties object with a root primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["a>b>testPrimitiveC", "Test Literal D"]
+					parameterBuilder platform, ["a>b>testPrimitiveC", "Test Literal D"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "Test Literal D"								
 		it "throws an exception when replacing a nested properties object with a root parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["a>b>testPrimitiveC", "testPrimitiveE"]
+					parameterBuilder platform, ["a>b>testPrimitiveC", "testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "testPrimitiveE"																			
 		it "throws an exception when replacing a nested primitive with properties", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal C", "a>b>testPrimitiveE"]
+					parameterBuilder platform, ["a>Test Literal C", "a>b>testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: ["a"]
 					parameter: "a>b>testPrimitiveE"						
 		it "throws an exception when replacing a nested primitive with a root primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal C", "Test Literal E"]
+					parameterBuilder platform, ["a>Test Literal C", "Test Literal E"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "Test Literal E"									
 		it "throws an exception when replacing a nested primitive with a root parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal C", "testPrimitiveE"]
+					parameterBuilder platform, ["a>Test Literal C", "testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "testPrimitiveE"									
 		it "throws an exception when replacing a nested primitive with a nested primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal C", "a>Test Literal E"]
+					parameterBuilder platform, ["a>Test Literal C", "a>Test Literal E"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: ["a"]
 					parameter: "a>Test Literal E"									
 		it "throws an exception when replacing a nested primitive with a nested parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["a>Test Literal C", "a>testPrimitiveE"]
+					parameterBuilder platform, ["a>Test Literal C", "a>testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: ["a"]
 					parameter: "a>testPrimitiveE"														
 		it "throws an exception when replacing a nested parameter with properties", ->
 			expect ->
-					parameterBuilder tokenized, ["a>testPrimitiveC", "a>b>testPrimitiveE"]
+					parameterBuilder platform, ["a>testPrimitiveC", "a>b>testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: ["a"]
 					parameter: "a>b>testPrimitiveE"
 		it "throws an exception when replacing a nested parameter with a root primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["a>testPrimitiveC", "Test Literal D"]
+					parameterBuilder platform, ["a>testPrimitiveC", "Test Literal D"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "Test Literal D"			
 		it "throws an exception when replacing a nested parameter with a root parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["a>testPrimitiveC", "testPrimitiveE"]
+					parameterBuilder platform, ["a>testPrimitiveC", "testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: []
 					parameter: "testPrimitiveE"							
 		it "throws an exception when replacing a nested parameter with a nested primitive", ->
 			expect ->
-					parameterBuilder tokenized, ["a>testPrimitiveC", "a>Test Literal D"]
+					parameterBuilder platform, ["a>testPrimitiveC", "a>Test Literal D"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: ["a"]
 					parameter: "a>Test Literal D"			
 		it "throws an exception when replacing a nested parameter with a nested parameter", ->
 			expect ->
-					parameterBuilder tokenized, ["a>testPrimitiveC", "a>testPrimitiveE"]
+					parameterBuilder platform, ["a>testPrimitiveC", "a>testPrimitiveE"]
 				.toThrow
 					reason: "parameterDefinedMultipleTimes"
 					chain: ["a"]

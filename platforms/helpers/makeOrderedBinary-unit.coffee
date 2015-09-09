@@ -28,8 +28,8 @@ describe "platforms", ->
 					expect(instance.generateCode).toEqual "Test GenerateCode"
 				describe "inputsEqual", ->
 					it "defers to valuesEquivalent and returns true when properties in the operands match", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (tokenized, a, b) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
 									expect(b).toEqual "Test Input BA"
@@ -46,12 +46,12 @@ describe "platforms", ->
 							properties:
 								a: "Test Input BA"
 								b: "Test Input BB"								
-						expect instance.inputsEqual "Test Tokenized", inputA, inputB
+						expect instance.inputsEqual "Test Platform", inputA, inputB
 							.toBeTruthy()
 							
 					it "defers to valuesEquivalent and returns false when properties in the operands do not match", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (tokenized, a, b) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
 									expect(b).toEqual "Test Input BA"
@@ -68,12 +68,12 @@ describe "platforms", ->
 							properties:
 								a: "Test Input BA"
 								b: "Test Input BB"								
-						expect instance.inputsEqual "Test Tokenized", inputA, inputB
+						expect instance.inputsEqual "Test Platform", inputA, inputB
 							.toBeFalsy()
 														
 					it "defers to valuesEquivalent and returns false when only the first property pair matches", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (tokenized, a, b) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
 									expect(b).toEqual "Test Input BA"
@@ -90,12 +90,12 @@ describe "platforms", ->
 							properties:
 								a: "Test Input BA"
 								b: "Test Input BB"								
-						expect instance.inputsEqual "Test Tokenized", inputA, inputB
+						expect instance.inputsEqual "Test Platform", inputA, inputB
 							.toBeFalsy()
 							
 					it "defers to valuesEquivalent and returns false when only the second property pair matches", ->
-						makeOrderedBinary.valuesEquivalent.and.callFake (tokenized, a, b) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						makeOrderedBinary.valuesEquivalent.and.callFake (platform, a, b) ->
+							expect(platform).toEqual "Test Platform"
 							switch a
 								when "Test Input AA"
 									expect(b).toEqual "Test Input BA"
@@ -112,7 +112,7 @@ describe "platforms", ->
 							properties:
 								a: "Test Input BA"
 								b: "Test Input BB"								
-						expect instance.inputsEqual "Test Tokenized", inputA, inputB
+						expect instance.inputsEqual "Test Platform", inputA, inputB
 							.toBeFalsy()							
 				describe "compile", ->
 					describe "when the input is not a properites object", ->

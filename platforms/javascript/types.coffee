@@ -23,9 +23,9 @@ module.exports =
 			equal: (a, b) -> a == b
 			assertionPass: true
 	functions: []
-	compile: (tokenized, input, output) ->
+	compile: (platform, input, output) ->
 		cache = module.exports.parameterCache input
-		result = module.exports.resultGenerator tokenized, cache, output
+		result = module.exports.resultGenerator platform, cache, output
 		working = (cached.working for cached in cache when cached.working).join "\n"
 		if working then working += "\n"
 		result = working + result

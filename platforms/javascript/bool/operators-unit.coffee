@@ -50,8 +50,8 @@ describe "platforms", ->
 						operators.makeOrderedBinary = makeOrderedBinary
 						operators.makeUnorderedBinary = makeUnorderedBinary						
 						
-						operators.codeCache = (tokenized, cache, value) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						operators.codeCache = (platform, cache, value) ->
+							expect(platform).toEqual "Test Platform"
 							expect(cache).toEqual "Test Cache"
 							switch value
 								when "Test Input" then return "Test Code"
@@ -85,7 +85,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.and.args[4] "Test Tokenized", "Test Cache", input
+							expect unorderedBinaries.and.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) && (Test Code B)"
 					describe "or", ->
 						it "is returned", ->
@@ -112,7 +112,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.or.args[4] "Test Tokenized", "Test Cache", input
+							expect unorderedBinaries.or.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) || (Test Code B)"
 					describe "equal", ->
 						it "is returned", ->
@@ -139,7 +139,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.equal.args[4] "Test Tokenized", "Test Cache", input
+							expect unorderedBinaries.equal.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) == (Test Code B)"
 					describe "not", ->
 						it "is returned", ->
@@ -156,5 +156,5 @@ describe "platforms", ->
 							expect(unaries.not.args[3] true).toBe false
 						
 						it "supports native code generation", ->
-							expect unaries.not.args[4] "Test Tokenized", "Test Cache", "Test Input"
+							expect unaries.not.args[4] "Test Platform", "Test Cache", "Test Input"
 								.toEqual "!(Test Code)"																		

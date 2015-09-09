@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized types.
+#	The platform instance.
 #	An array of parameter names in the format:
 # 		(property name).(property name).(primitive type name or literal)
 # Returns:
@@ -22,7 +22,7 @@
 #					"chain": Array of strings; the property chain where the 
 #						problem occurred.
 #					"type": The unrecognized type name.
-module.exports = (tokenized, parameters) ->
+module.exports = (platform, parameters) ->
 	input = {}
 	
 	if parameters
@@ -57,8 +57,8 @@ module.exports = (tokenized, parameters) ->
 					chain: chain
 					parameter: parameter
 		
-			for primitiveName of tokenized.primitives
-				parsed = tokenized.primitives[primitiveName].parse tokens[0]
+			for primitiveName of platform.primitives
+				parsed = platform.primitives[primitiveName].parse tokens[0]
 				if parsed isnt undefined
 					found.primitive =
 						type: primitiveName
@@ -67,7 +67,7 @@ module.exports = (tokenized, parameters) ->
 		
 			if found.primitive then continue
 		
-			if not tokenized.primitives[tokens[0]]
+			if not platform.primitives[tokens[0]]
 				chain = parameter.split ">"
 				chain.pop() for [0 ... tokens.length]		
 				throw

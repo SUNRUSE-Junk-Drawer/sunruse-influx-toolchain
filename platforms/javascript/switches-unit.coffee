@@ -25,8 +25,8 @@ describe "platforms", ->
 					functions = switches()
 					switches.makeSwitch = makeSwitch						
 					
-					switches.codeCache = (tokenized, cache, value) ->
-						expect(tokenized).toEqual "Test Tokenized"
+					switches.codeCache = (platform, cache, value) ->
+						expect(platform).toEqual "Test Platform"
 						expect(cache).toEqual "Test Cache"
 						switch value
 							when "Test Input On" then return "Test Code On"
@@ -49,7 +49,7 @@ describe "platforms", ->
 								a: "Test Input A"
 								b: "Test Input B"
 								on: "Test Input On"		
-						expect created.int.args[1] "Test Tokenized", "Test Cache", input
+						expect created.int.args[1] "Test Platform", "Test Cache", input
 							.toEqual "(Test Code On) ? (Test Code B) : (Test Code A)"
 				describe "float", ->
 					it "is returned", ->
@@ -65,7 +65,7 @@ describe "platforms", ->
 								a: "Test Input A"
 								b: "Test Input B"
 								on: "Test Input On"		
-						expect created.float.args[1] "Test Tokenized", "Test Cache", input
+						expect created.float.args[1] "Test Platform", "Test Cache", input
 							.toEqual "(Test Code On) ? (Test Code B) : (Test Code A)"
 							
 				describe "bool", ->
@@ -82,5 +82,5 @@ describe "platforms", ->
 								a: "Test Input A"
 								b: "Test Input B"
 								on: "Test Input On"		
-						expect created.bool.args[1] "Test Tokenized", "Test Cache", input
+						expect created.bool.args[1] "Test Platform", "Test Cache", input
 							.toEqual "(Test Code On) ? (Test Code B) : (Test Code A)"							

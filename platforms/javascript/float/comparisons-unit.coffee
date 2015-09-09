@@ -35,8 +35,8 @@ describe "platforms", ->
 						functions = comparisons()
 						comparisons.makeOrderedBinary = makeOrderedBinary
 						comparisons.makeUnorderedBinary = makeUnorderedBinary		
-						comparisons.codeCache = (tokenized, cache, value) ->
-							expect(tokenized).toEqual "Test Tokenized"
+						comparisons.codeCache = (platform, cache, value) ->
+							expect(platform).toEqual "Test Platform"
 							expect(cache).toEqual "Test Cache"
 							switch value
 								when "Test Input" then return "Test Code"
@@ -66,7 +66,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect unorderedBinaries.equal.args[4] "Test Tokenized", "Test Cache", input
+							expect unorderedBinaries.equal.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) == (Test Code B)"
 								
 					describe "greater", ->
@@ -90,7 +90,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.greater.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.greater.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) > (Test Code B)"								
 								
 					describe "less", ->
@@ -114,7 +114,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.less.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.less.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) < (Test Code B)"								
 								
 					describe "greaterEqual", ->
@@ -138,7 +138,7 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.greaterEqual.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.greaterEqual.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) >= (Test Code B)"								
 								
 					describe "lessEqual", ->
@@ -162,5 +162,5 @@ describe "platforms", ->
 								properties:
 									a: "Test Input A"
 									b: "Test Input B"	
-							expect orderedBinaries.lessEqual.args[4] "Test Tokenized", "Test Cache", input
+							expect orderedBinaries.lessEqual.args[4] "Test Platform", "Test Cache", input
 								.toEqual "(Test Code A) <= (Test Code B)"																

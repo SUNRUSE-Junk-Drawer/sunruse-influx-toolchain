@@ -24,8 +24,8 @@ module.exports = (name, inputType, outputType, forConstants, generateCode) ->
 					native:
 						function: instance
 						input: value
-		inputsEqual: (tokenized, a, b) ->
-			module.exports.valuesEquivalent tokenized, a, b
+		inputsEqual: (platform, a, b) ->
+			module.exports.valuesEquivalent platform, a, b
 		generateCode: generateCode
 module.exports.valueIsPrimitive = require "./../../toolchain/valueIsPrimitive"
 module.exports.valuesEquivalent = require "./../../toolchain/valuesEquivalent"

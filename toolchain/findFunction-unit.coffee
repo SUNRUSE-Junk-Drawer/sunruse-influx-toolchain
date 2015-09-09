@@ -10,7 +10,7 @@ describe "findFunction", ->
 			expect(findFunction.valuesEquivalent).toBe require "./valuesEquivalent"
 		
 	describe "on calling", ->
-		valuesEquivalent = tokenized = input = undefined
+		valuesEquivalent = platform = input = undefined
 		functionAResult = functionBResult = functionCResult = functionDResult = functionEResult = undefined
 		nativeAResult = nativeBResult = nativeCResult = nativeDResult = nativeEResult = undefined
 		cache = logs = undefined
@@ -25,36 +25,36 @@ describe "findFunction", ->
 			spyOn findFunction, "compileExpression"
 				.and.returnValue null
 			
-			findFunction.compileExpression.and.callFake (_tokenized, _input, _expression, _funct, _logs, prefix) ->
-				expect(_tokenized).toBe tokenized
+			findFunction.compileExpression.and.callFake (_platform, _input, _expression, _funct, _logs, prefix) ->
+				expect(_platform).toBe platform
 				expect(_input).toBe input
 				if logs	isnt undefined
 					expect(_logs).toBe logs
 				
 				if _logs
-					_logs.push prefix + " for " + tokenized.functions.indexOf _funct
+					_logs.push prefix + " for " + platform.functions.indexOf _funct
 				
 				switch _funct
-					when tokenized.functions[0]
+					when platform.functions[0]
 						expect(_expression).toEqual "Test Function A Output"
 						return functionAResult
-					when tokenized.functions[1]
+					when platform.functions[1]
 						expect(_expression).toEqual "Test Function B Output"
 						return functionBResult	
-					when tokenized.functions[2]
+					when platform.functions[2]
 						expect(_expression).toEqual "Test Function C Output"
 						return functionCResult			
-					when tokenized.functions[3]
+					when platform.functions[3]
 						expect(_expression).toEqual "Test Function D Output"
 						return functionDResult
-					when tokenized.functions[4]
+					when platform.functions[4]
 						expect(_expression).toEqual "Test Function E Output"
 						return functionEResult
-					when tokenized.functions[5]
+					when platform.functions[5]
 						expect(_expression).toEqual "Test Function F Output"
 						return functionFResult			
 			
-			tokenized = 
+			platform = 
 				functions: [
 						name: "functionA"
 						line:
@@ -179,8 +179,8 @@ describe "findFunction", ->
 						output: "Test Cached Output D C"								
 				]
 			valuesEquivalent = findFunction.valuesEquivalent
-			findFunction.valuesEquivalent = (_tokenized, a, b) ->
-				expect(_tokenized).toBe tokenized
+			findFunction.valuesEquivalent = (_platform, a, b) ->
+				expect(_platform).toBe platform
 		
 		afterEach ->
 			findFunction.valuesEquivalent = valuesEquivalent
@@ -188,11 +188,11 @@ describe "findFunction", ->
 		describe "when not logging", ->
 			sharedTests = ->
 				it "returns the cached value when the function name/input are present in the cache", ->
-					findFunction.valuesEquivalent = (_tokenized, a, b) ->
-						expect(_tokenized).toBe tokenized
+					findFunction.valuesEquivalent = (_platform, a, b) ->
+						expect(_platform).toBe platform
 						expect(a is input or b is input).toBeTruthy()
 						return a is "Test Cached Input A B" or b is "Test Cached Input A B"
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toEqual "Test Cached Output A B"
 					expect(cache).toEqual
 						functionA: [
@@ -221,7 +221,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70			
-					expect findFunction tokenized, input, "unresolvable", null, null, cache
+					expect findFunction platform, input, "unresolvable", null, null, cache
 						.toBeFalsy()
 					expect(cache).toEqual
 						unresolvable: [
@@ -253,7 +253,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70			
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBeFalsy()		
 					expect(cache).toEqual
 						functionA: [
@@ -286,7 +286,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70						
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBe nativeBResult			
 					expect(cache).toEqual
 						functionA: [
@@ -319,7 +319,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70						
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBe functionAResult					
 					expect(cache).toEqual
 						functionA: [
@@ -350,7 +350,7 @@ describe "findFunction", ->
 						score: 70						
 					nativeBResult = 
 						score: 30
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBe nativeAResult					
 					expect(cache).toEqual
 						functionA: [
@@ -381,7 +381,7 @@ describe "findFunction", ->
 						score: 30						
 					functionBResult = 
 						score: 70
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBe functionBResult							
 					expect(cache).toEqual
 						functionA: [
@@ -416,7 +416,7 @@ describe "findFunction", ->
 						score: 90						
 					functionBResult = 
 						score: 10		
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBe functionAResult								
 					expect(cache).toEqual
 						functionA: [
@@ -451,7 +451,7 @@ describe "findFunction", ->
 						score: 20						
 					functionBResult = 
 						score: 10		
-					expect findFunction tokenized, input, "functionA", null, null, cache
+					expect findFunction platform, input, "functionA", null, null, cache
 						.toBe nativeBResult
 					expect(cache).toEqual
 						functionA: [
@@ -487,7 +487,7 @@ describe "findFunction", ->
 						testPropertyB: "Test Property B"
 						testPropertyC: "Test Property C"
 				it "returns the property when a property of the input matches by name", ->
-					expect findFunction tokenized, input, "testPropertyB", null, null, cache
+					expect findFunction platform, input, "testPropertyB", null, null, cache
 						.toEqual "Test Property B" 
 					expect(cache).toEqual
 						functionA: [
@@ -518,11 +518,11 @@ describe "findFunction", ->
 			
 			sharedTests = ->
 				it "returns the cached value when the function name/input are present in the cache", ->
-					findFunction.valuesEquivalent = (_tokenized, a, b) ->
-						expect(_tokenized).toBe tokenized
+					findFunction.valuesEquivalent = (_platform, a, b) ->
+						expect(_platform).toBe platform
 						expect(a is input or b is input).toBeTruthy()
 						return a is "Test Cached Input A B" or b is "Test Cached Input A B"
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toEqual "Test Cached Output A B"
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTaken from cache."]
 					expect(cache).toEqual
@@ -552,7 +552,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70			
-					expect findFunction tokenized, input, "unresolvable", logs, "Test Prefix", cache
+					expect findFunction platform, input, "unresolvable", logs, "Test Prefix", cache
 						.toBeFalsy()
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"unresolvable\"...", "Test Prefix\tNo matches were found."]
 					expect(cache).toEqual
@@ -586,7 +586,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70			
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBeFalsy()		
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tNo matches were found."]
 					expect(cache).toEqual
@@ -621,7 +621,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70						
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBe nativeBResult			
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tSuccessfully compiled with a score of 30.", "Test Prefix\tSelected the native implementation returning primitive type \"Test Output B\" which scored 30."]
 					expect(cache).toEqual
@@ -655,7 +655,7 @@ describe "findFunction", ->
 						score: 70													
 					nativeEResult = 
 						score: 70						
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBe functionAResult					
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tSuccessfully compiled with a score of 30.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tSelected the implementation in file \"Test Filename A\" on line 2736 which scored 30."]
 					expect(cache).toEqual
@@ -687,7 +687,7 @@ describe "findFunction", ->
 						score: 70						
 					nativeBResult = 
 						score: 30
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBe nativeAResult			
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tSuccessfully compiled with a score of 70.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tSuccessfully compiled with a score of 30.", "Test Prefix\tSelected the native implementation returning primitive type \"Test Output A\" which scored 70."]
 					expect(cache).toEqual
@@ -719,7 +719,7 @@ describe "findFunction", ->
 						score: 30						
 					functionBResult = 
 						score: 70
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBe functionBResult		
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tSuccessfully compiled with a score of 30.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tSuccessfully compiled with a score of 70.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tThis implementation did not compile.", "Test Prefix\tSelected the implementation in file \"Test Filename B\" on line 23587235 which scored 70."]
 					expect(cache).toEqual
@@ -755,7 +755,7 @@ describe "findFunction", ->
 						score: 90						
 					functionBResult = 
 						score: 10		
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBe functionAResult		
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tSuccessfully compiled with a score of 90.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tSuccessfully compiled with a score of 10.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tSuccessfully compiled with a score of 70.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tSuccessfully compiled with a score of 30.", "Test Prefix\tSelected the implementation in file \"Test Filename A\" on line 2736 which scored 90."]
 					expect(cache).toEqual
@@ -791,7 +791,7 @@ describe "findFunction", ->
 						score: 20						
 					functionBResult = 
 						score: 10		
-					expect findFunction tokenized, input, "functionA", logs, "Test Prefix", cache
+					expect findFunction platform, input, "functionA", logs, "Test Prefix", cache
 						.toBe nativeBResult			
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"functionA\"...", "Test Prefix\tTrying implementation in file \"Test Filename A\" on line 2736...", "Test Prefix\t\t for 0", "Test Prefix\t\tSuccessfully compiled with a score of 20.", "Test Prefix\tTrying implementation in file \"Test Filename B\" on line 23587235...", "Test Prefix\t\t for 1", "Test Prefix\t\tSuccessfully compiled with a score of 10.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output A\"...", "Test Prefix\t\t for native function A", "Test Prefix\t\tSuccessfully compiled with a score of 25.", "Test Prefix\tTrying native implementation returning primitive type \"Test Output B\"...", "Test Prefix\t\t for native function B", "Test Prefix\t\tSuccessfully compiled with a score of 90.", "Test Prefix\tSelected the native implementation returning primitive type \"Test Output B\" which scored 90."]
 					expect(cache).toEqual
@@ -831,7 +831,7 @@ describe "findFunction", ->
 						testPropertyC: 
 							score: 710
 				it "returns the property when a property of the input matches by name", ->
-					expect findFunction tokenized, input, "testPropertyB", logs, "Test Prefix", cache
+					expect findFunction platform, input, "testPropertyB", logs, "Test Prefix", cache
 						.toBe input.properties.testPropertyB
 					expect(logs).toEqual ["Existing Log A", "Existing Log B", "Test PrefixAttempting to find a match for function \"testPropertyB\"...", "Test Prefix\tUsing the property of the input with a score of 531."]
 					expect(cache).toEqual

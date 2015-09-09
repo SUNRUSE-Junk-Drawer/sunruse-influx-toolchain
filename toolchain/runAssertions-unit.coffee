@@ -9,9 +9,9 @@ describe "toolchain", ->
 			it "compileExpression", ->
 				expect(runAssertions.compileExpression).toBe require "./compileExpression"
 		describe "on calling", ->
-			compileExpression = tokenized = undefined
+			compileExpression = platform = undefined
 			beforeEach ->
-				tokenized = 
+				platform = 
 					functions: [
 							name: "ignore function a",
 							declarations: 
@@ -73,34 +73,34 @@ describe "toolchain", ->
 								return true
 				
 				compileExpression = runAssertions.compileExpression
-				runAssertions.compileExpression = (_tokenized, input, expression, funct, log, logPrefix, cache) ->
+				runAssertions.compileExpression = (_platform, input, expression, funct, log, logPrefix, cache) ->
 					expect(cache).toEqual {}
-					expect(_tokenized).toBe tokenized
+					expect(_platform).toBe platform
 					expect(input).toEqual
 						score: 0
 						properties: {}
 					switch funct
-						when tokenized.functions[1]
+						when platform.functions[1]
 							expect(expression).toEqual "assert a output"
 							return null
-						when tokenized.functions[2]
+						when platform.functions[2]
 							expect(expression).toEqual "assert b output"
 							return unused =
 								parameter:
 									type: "primitiveC"
-						when tokenized.functions[3]
+						when platform.functions[3]
 							expect(expression).toEqual "assert c output"
 							return unused =
 								primitive:
 									type: "primitiveB"
 									value: "assert c result"
-						when tokenized.functions[4]
+						when platform.functions[4]
 							expect(expression).toEqual "assert d output"
 							return unused =
 								primitive:
 									type: "primitiveA"
 									value: "assert d result"
-						when tokenized.functions[5]
+						when platform.functions[5]
 							expect(expression).toEqual "assert e output"
 							return unused =
 								primitive:
@@ -115,36 +115,36 @@ describe "toolchain", ->
 			it "returns the test results", ->
 				expected = [
 						resultType: "failedToCompile"
-						assertion: tokenized.functions[1]
+						assertion: platform.functions[1]
 					,
 						resultType: "didNotReturnPrimitiveConstant"
-						assertion: tokenized.functions[2]
+						assertion: platform.functions[2]
 						output:
 							parameter:
 								type: "primitiveC"
 					,
 						resultType: "primitiveTypeNotAssertable"
-						assertion: tokenized.functions[3]
+						assertion: platform.functions[3]
 						output:
 							primitive:
 								type: "primitiveB"
 								value: "assert c result"
 					,
 						resultType: "primitiveValueIncorrect"
-						assertion: tokenized.functions[4]
+						assertion: platform.functions[4]
 						output:
 							primitive:
 								type: "primitiveA"
 								value: "assert d result"
 					,
 						resultType: "successful"
-						assertion: tokenized.functions[5]
+						assertion: platform.functions[5]
 						output:
 							primitive:
 								type: "primitiveC"
 								value: "assert e result"
 				]
 				
-				actual = runAssertions tokenized
+				actual = runAssertions platform
 				
 				expect(actual).toHaveSameItems expected

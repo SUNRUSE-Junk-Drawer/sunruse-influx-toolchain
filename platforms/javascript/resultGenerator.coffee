@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized types.
+#	The platform instance.
 #	The array of previously generated code returned by parameterCache/used by
 #		codeCache.
 #	The output value object to generate code for.
@@ -7,7 +7,7 @@
 #	A string representing native code specifying the return statement.  For
 #		properties this takes the form of an anonymous object, while for 
 #		primitive types the bare value is returned.
-module.exports = (tokenized, cache, output) ->
+module.exports = (platform, cache, output) ->
 	final = []
 	recurseResults = (val, prefix, indents, suffix) ->
 		if val.properties
@@ -18,7 +18,7 @@ module.exports = (tokenized, cache, output) ->
 				done++ 
 			final.push indents + "}" + suffix
 		else
-			final.push indents + prefix + (module.exports.codeCache tokenized, cache, val) + suffix
+			final.push indents + prefix + (module.exports.codeCache platform, cache, val) + suffix
 	
 	recurseResults output, "return ", "", ";"
 	final.join "\n"

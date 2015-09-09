@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized types.
+#	The platform instance.
 # Returns:
 #	An array, wherein each item is an object describing an assertion result:
 #		resultType: String describing the outcome of the assertion:
@@ -8,7 +8,7 @@
 #			"primitiveTypeNotAssertable"
 #			"primitiveValueIncorrect"				
 #			"successful"
-#		assertion: The function from the tokenized types which was attempted to
+#		assertion: The function from the platform which was attempted to
 #			be compiled.
 #		output: When truthy, the function compiled, and its output value object
 #			is here.
@@ -16,12 +16,12 @@
 # properties object.  Each should return a single primitive constant.  If the
 # value is equivalent to the primitive type's "assertionPass" property, the
 # assertion passes.
-module.exports = (tokenized) ->
+module.exports = (platform) ->
 	emptyProperties = 
 		score: 0
 		properties: {}
-	for funct in tokenized.functions when funct.name is "assert"
-		result = module.exports.compileExpression tokenized, emptyProperties, funct.declarations.output, funct, null, null, {}
+	for funct in platform.functions when funct.name is "assert"
+		result = module.exports.compileExpression platform, emptyProperties, funct.declarations.output, funct, null, null, {}
 		if not result 
 			resultType: "failedToCompile"
 			assertion: funct
@@ -31,7 +31,7 @@ module.exports = (tokenized) ->
 				assertion: funct
 				output: result
 			else
-				primitive = tokenized.primitives[result.primitive.type]
+				primitive = platform.primitives[result.primitive.type]
 				if primitive.assertionPass is undefined
 					resultType: "primitiveTypeNotAssertable"
 					assertion: funct

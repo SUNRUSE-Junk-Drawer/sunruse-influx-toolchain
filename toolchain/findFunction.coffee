@@ -1,5 +1,5 @@
 # Given:
-#	The tokenized functions.
+#	The platform instance.
 #	The value object to take as an input.
 #	The name of the function to resolve.
 #	Optionally, an array of strings.  This will be written to log attempts to
@@ -19,7 +19,7 @@
 #	If no matching function compiled, falsy.
 #	If functions matched, the value object returned by the highest scoring function,
 #	whether native or otherwise.
-module.exports = (tokenized, input, name, log, logPrefix, cache) ->
+module.exports = (platform, input, name, log, logPrefix, cache) ->
 	if log
 		log.push logPrefix + "Attempting to find a match for function \"" + name + "\"..."
 	if input.properties and input.properties[name]
@@ -29,7 +29,7 @@ module.exports = (tokenized, input, name, log, logPrefix, cache) ->
 	else
 		if cache[name]
 			for cached in cache[name]
-				if module.exports.valuesEquivalent tokenized, input, cached.input
+				if module.exports.valuesEquivalent platform, input, cached.input
 					if log
 						log.push logPrefix + "\tTaken from cache."
 					return cached.output
@@ -54,15 +54,15 @@ module.exports = (tokenized, input, name, log, logPrefix, cache) ->
 			else if log
 				log.push logPrefix + "\t\tThis implementation did not compile."
 					
-		for id of tokenized.functions
-			implementation = tokenized.functions[id]
+		for id of platform.functions
+			implementation = platform.functions[id]
 			if implementation.name isnt name then continue
 			if log
 				log.push logPrefix + "\tTrying implementation in file \"" + implementation.line.filename + "\" on line " + implementation.line.line + "..."			
-			handleValue (module.exports.compileExpression tokenized, input, implementation.declarations.output, implementation, log, logPrefix + "\t\t", cache), implementation					
+			handleValue (module.exports.compileExpression platform, input, implementation.declarations.output, implementation, log, logPrefix + "\t\t", cache), implementation					
 					
-		for id of tokenized.nativeFunctions
-			implementation = tokenized.nativeFunctions[id]
+		for id of platform.nativeFunctions
+			implementation = platform.nativeFunctions[id]
 			if implementation.name isnt name then continue
 			if log
 				log.push logPrefix + "\tTrying native implementation returning primitive type \"" + implementation.output + "\"..." 

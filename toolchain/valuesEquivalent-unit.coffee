@@ -1,10 +1,10 @@
 require "jasmine-collection-matchers"
 
 describe "valuesEquivalent", ->
-	tokenized = a = b = valuesEquivalent = undefined
+	platform = a = b = valuesEquivalent = undefined
 	beforeEach ->
 		valuesEquivalent = require "./valuesEquivalent"
-		tokenized =
+		platform =
 			primitives:
 				testPrimitiveA:
 					equal: ->
@@ -30,16 +30,16 @@ describe "valuesEquivalent", ->
 						b: "Test Property BB"				
 			it "returns falsy when properties exist in a but not b", ->
 				a.properties.c = "Test Property AC"
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()
 			it "returns falsy when properties exist in b but not a", ->
 				b.properties.c ="Test Property BC"
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()
 			it "returns falsy when properties fail to match", ->
 				spyOn valuesEquivalent, "valuesEquivalent"
-					.and.callFake (_tokenized, a, b) ->
-						expect(_tokenized).toBe tokenized
+					.and.callFake (_platform, a, b) ->
+						expect(_platform).toBe platform
 						switch a
 							when "Test Property AA"
 								expect(b).toEqual "Test Property BA"
@@ -47,12 +47,12 @@ describe "valuesEquivalent", ->
 							when "Test Property AB"
 								expect(b).toEqual "Test Property BB"
 								return false								
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()
 			it "returns truthy when all properties exist in both and match", ->
 				spyOn valuesEquivalent, "valuesEquivalent"
-					.and.callFake (_tokenized, a, b) ->
-						expect(_tokenized).toBe tokenized
+					.and.callFake (_platform, a, b) ->
+						expect(_platform).toBe platform
 						switch a
 							when "Test Property AA"
 								expect(b).toEqual "Test Property BA"
@@ -60,22 +60,22 @@ describe "valuesEquivalent", ->
 							when "Test Property AB"
 								expect(b).toEqual "Test Property BB"
 								return true								
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeTruthy()
 		it "returns falsy given a parameter", ->
 			b = 
 				parameter: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()
 		it "returns falsy given a primitive constant", ->
 			b = 
 				primitive: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()			
 		it "returns falsy given a native function call", ->
 			b = 
 				native: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()				
 	describe "given a parameter", ->
 		beforeEach ->
@@ -84,24 +84,24 @@ describe "valuesEquivalent", ->
 		it "returns falsy given a properties object", ->
 			b = 
 				properties: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()				
 		describe "and another parameter", ->
 			it "returns falsy when the parameters are distinct by reference", ->
-				expect valuesEquivalent tokenized, a, {}
+				expect valuesEquivalent platform, a, {}
 					.toBeFalsy()					
 			it "returns truthy when the parameters are the exact same reference", ->
-				expect valuesEquivalent tokenized, a, a
+				expect valuesEquivalent platform, a, a
 					.toBeTruthy()	
 		it "returns falsy given a primitive constant", ->
 			b = 
 				primitive: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()				
 		it "returns falsy given a native function call", ->
 			b = 
 				native: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()							
 	describe "given a primitive constant", ->
 		beforeEach ->
@@ -112,12 +112,12 @@ describe "valuesEquivalent", ->
 		it "returns falsy given a properties object", ->
 			b = 
 				properties: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()							
 		it "returns falsy given a parameter", ->
 			b = 
 				parameter: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()							
 		describe "given another primitive constant", ->
 			it "returns falsy when the types do not match", ->
@@ -125,26 +125,26 @@ describe "valuesEquivalent", ->
 					primitive:
 						type: "testPrimitiveA"
 						value: "Test Primitive Value B"
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()								
 			it "returns falsy when the primitive types match and its \"equivalent\" function returns falsy", ->
 				b = 
 					primitive:
 						type: "testPrimitiveB"
 						value: "Test Primitive Value C"
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()						
 			it "returns truthy when the primitive types match and its \"equivalent\" function returns truthy", ->
 				b = 
 					primitive:
 						type: "testPrimitiveB"
 						value: "Test Primitive Value B"
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeTruthy()				
 		it "returns falsy given a native function call", ->
 			b = 
 				native: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()										
 	describe "given a native function call", ->
 		beforeEach ->
@@ -152,23 +152,23 @@ describe "valuesEquivalent", ->
 				native:
 					input: "Test Function Input A"
 					function:
-						inputsEqual: (_tokenized, a, b) ->
-							expect(_tokenized).toBe tokenized
+						inputsEqual: (_platform, a, b) ->
+							expect(_platform).toBe platform
 							if a is "Test Function Input A" and b is "Test Function Input B" then return true
 		it "returns falsy given a properties object", ->
 			b = 
 				properties: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()		
 		it "returns falsy given a parameter", ->
 			b = 
 				parameter: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()					
 		it "returns falsy given a primitive constant", ->
 			b = 
 				primitive: {}
-			expect valuesEquivalent tokenized, a, b
+			expect valuesEquivalent platform, a, b
 				.toBeFalsy()					
 		describe "when given another native function call", ->
 			beforeEach ->
@@ -178,12 +178,12 @@ describe "valuesEquivalent", ->
 						function: a.native.function				
 			it "returns falsy when the functions do not match", ->
 				b.native.function = {}
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()
 			it "returns falsy when the functions match and its \"inputsEqual\" function returns falsy", ->
 				b.native.input = "Test Function Input C"
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeFalsy()				
 			it "returns falsy when the functions match and its \"inputsEqual\" function returns truthy", ->
-				expect valuesEquivalent tokenized, a, b
+				expect valuesEquivalent platform, a, b
 					.toBeTruthy()								
