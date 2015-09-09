@@ -9,8 +9,9 @@
   "dependencies": {
     "file": "^0.2.2",
     "grunt": "^0.4.5",
-    "grunt-contrib-coffee": "^0.13.0",
+    "grunt-concurrent": "^2.0.3",
     "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-coffee": "^0.13.0",
     "grunt-contrib-copy": "^0.8.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jasmine-nodejs": "^1.4.3",
@@ -18,8 +19,8 @@
     "jasmine-collection-matchers": "^0.1.0",
     "rewire": "^2.3.4",
     "webpack": "^1.11.0",
-    "yargs": "^3.21.0",
-    "webpack-dev-server": "^1.10.1"
+    "webpack-dev-server": "^1.10.1",
+    "yargs": "^3.21.0"
   },
   "devDependencies": {},
   "scripts": {
