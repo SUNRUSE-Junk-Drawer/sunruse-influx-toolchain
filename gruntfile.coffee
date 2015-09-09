@@ -16,11 +16,15 @@ module.exports = (grunt) ->
     grunt.registerTask "testPlatforms", ["jasmine_nodejs:platformsUnit", "jasmine_nodejs:platformsIntegration"]
     grunt.registerTask "deployPlatforms", ["clean:platformsDeploy", "copy:platforms"]
     
+    grunt.registerTask "buildCli", ["clean:cliBuild", "coffee:cli"]
+    grunt.registerTask "testCli", ["jasmine_nodejs:cli"]
+    grunt.registerTask "deployCli", ["clean:cliDeploy", "copy:cli"]
+    
     grunt.registerTask "testLibraries", ["jasmine_nodejs:runAssertions"]
     
-    grunt.registerTask "build", ["buildToolchain", "buildPlatforms"]
-    grunt.registerTask "test", ["testToolchain", "testPlatforms", "testLibraries"]
-    grunt.registerTask "deploy", ["deployToolchain", "deployPlatforms"]
+    grunt.registerTask "build", ["buildToolchain", "buildPlatforms", "buildCli"]
+    grunt.registerTask "test", ["testToolchain", "testPlatforms", "testLibraries", "testCli"]
+    grunt.registerTask "deploy", ["deployToolchain", "deployPlatforms", "deployCli"]
         
     grunt.initConfig
         clean:
@@ -28,6 +32,8 @@ module.exports = (grunt) ->
             toolchainDeploy: "deploy/toolchain"
             platformsBuild: "build/platforms"
             platformsDeploy: "deploy/platforms"
+            cliBuild: "build/cli"
+            cliDeploy: "deploy/cli"
         jasmine_nodejs:
             options:
                 specNameSuffix: ".js"
@@ -40,6 +46,8 @@ module.exports = (grunt) ->
                 specs: ["build/platforms/**/*-unit.js"]
             platformsIntegration: 
                 specs: ["build/platforms/**/*-integration.js"]
+            cli: 
+                specs: ["build/cli/**/*-unit.js"]
             runAssertions: 
                 specs: ["build/toolchain/selftest.js"]
         copy:
@@ -57,6 +65,13 @@ module.exports = (grunt) ->
                     src: ["**/*.js", "!**/*-unit.js"]
                     dest: "deploy/platforms"
                 ]
+            cli:
+                files: [
+                    expand: true
+                    cwd: "build/cli"
+                    src: ["**/*.js", "!**/*-unit.js"]
+                    dest: "deploy/cli"
+                ]
         coffee:
             toolchain:
                 files: [
@@ -72,6 +87,13 @@ module.exports = (grunt) ->
                         dest: "build"
                         ext: ".js"
                 ]
+            cli:
+                files: [
+                        expand: true
+                        src: ["cli/**/*.coffee"]
+                        dest: "build"
+                        ext: ".js"
+                ]
         watch:
             toolchain:
                 options:
@@ -84,7 +106,10 @@ module.exports = (grunt) ->
             libraries:
                 files: ["deploy/platforms/**/*", "libraries/**/*"]
                 tasks: ["testLibraries"]
+            cli:
+                files: ["deploy/platforms/**/*", "cli/**/*"]
+                tasks: ["buildCli", "testCli", "deployCli"]
         concurrent:
             options:
                 logConcurrentOutput: true
-            tasks: ["watch:toolchain", "watch:platforms", "watch:libraries"]
+            tasks: ["watch:toolchain", "watch:platforms", "watch:libraries", "watch:cli"]
