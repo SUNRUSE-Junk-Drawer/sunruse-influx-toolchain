@@ -21,7 +21,7 @@ module.exports = (configuration) ->
 		module.exports.processStderr.write "Cannot output assertion results when assertions are disabled using -a or --run-assertions"
 		module.exports.processExit 1
 	else
-		platform = module.exports.platforms[configuration.platform]
+		platform = module.exports.platforms[configuration.platform]()
 		input = undefined
 		try
 			input = module.exports.parameterBuilder platform, configuration.input

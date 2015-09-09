@@ -2,7 +2,7 @@
 fs = require "fs"
 tokenizer = require "./tokenizer"
 runAssertions = require "./runAssertions"
-platform = require "./../platforms/javascript/types"
+platform = (require "./../platforms/javascript/types")()
 
 describe "library self-test", ->
 	paths =

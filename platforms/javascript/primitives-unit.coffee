@@ -1,4 +1,4 @@
-platform = require "./types"
+platform = (require "./types")()
 
 describe "platforms", ->
 	describe "javascript", ->

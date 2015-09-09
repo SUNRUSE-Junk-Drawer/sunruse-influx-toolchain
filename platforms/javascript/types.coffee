@@ -1,4 +1,4 @@
-module.exports =
+module.exports = ->
 	nativeFunctions:
 		(require "./int/arithmetic")()
 			.concat (require "./int/comparisons")()
