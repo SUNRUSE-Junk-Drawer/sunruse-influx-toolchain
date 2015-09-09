@@ -1,21 +1,3 @@
-# Given:
-#	The platform instance.
-# Returns:
-#	An array, wherein each item is an object describing an assertion result:
-#		resultType: String describing the outcome of the assertion:
-#			"failedToCompile"
-#			"didNotReturnPrimitiveConstant"
-#			"primitiveTypeNotAssertable"
-#			"primitiveValueIncorrect"				
-#			"successful"
-#		assertion: The function from the platform which was attempted to
-#			be compiled.
-#		output: When truthy, the function compiled, and its output value object
-#			is here.
-# This compiles every function named "assert" with an input of an empty
-# properties object.  Each should return a single primitive constant.  If the
-# value is equivalent to the primitive type's "assertionPass" property, the
-# assertion passes.
 module.exports = (platform) ->
 	emptyProperties = 
 		score: 0

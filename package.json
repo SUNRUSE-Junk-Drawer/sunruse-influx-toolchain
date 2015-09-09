@@ -1,26 +1,16 @@
 {
-  "name": "sunruse.influx",
-  "version": "0.0.0",
-  "description": "A constant time, loosely-then-statically typed, purely functional programming language.",
-  "main": "index.js",
-  "directories": {
-    "example": "examples"
-  },
+  "name": "sunruse-influx-toolchain",
+  "version": "1.0.0",
+  "description": "This is a library of functions used to compile SUNRUSE.influx source code to expression trees so that it can be assembled to native code.  On requiring "sunruse-influx-toolchain", you will get an object containing the toolchain functions.",
+  "main": "deploy/index.js",
   "dependencies": {
-    "file": "^0.2.2",
     "grunt": "^0.4.5",
-    "grunt-concurrent": "^2.0.3",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-coffee": "^0.13.0",
     "grunt-contrib-copy": "^0.8.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-jasmine-nodejs": "^1.4.3",
-    "grunt-webpack": "^1.0.11",
-    "jasmine-collection-matchers": "^0.1.0",
-    "rewire": "^2.3.4",
-    "webpack": "^1.11.0",
-    "webpack-dev-server": "^1.10.1",
-    "yargs": "^3.21.0"
+    "jasmine-collection-matchers": "^0.1.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -29,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jameswilddev/SUNRUSE.influx.git"
+    "url": "https://github.com/SUNRUSE/sunruse-influx-toolchain.git"
   },
   "keywords": [
     "sunruse",
@@ -44,9 +34,9 @@
     "time"
   ],
   "author": "SUNRUSE",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jameswilddev/SUNRUSE.influx/issues"
+    "url": "https://github.com/SUNRUSE/sunruse-influx-toolchain/issuess"
   },
-  "homepage": "https://github.com/jameswilddev/SUNRUSE.influx#readme"
+  "homepage": "https://github.com/SUNRUSE/sunruse-influx-toolchain"
 }

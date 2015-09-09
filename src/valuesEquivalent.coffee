@@ -1,14 +1,3 @@
-# Given:
-#	The platform instance.
-#	A value object.
-#	Another value object.
-# Returns:
-#	Truthy if the value objects are considered the same.
-#	For properties, this recurses and returns truthy only when every property is considered the same.
-#	Parameters are compared by reference.
-#	Native function calls are compared first comparing the functions by reference and then using the "inputsEqual" function against the function.
-#	Primitive constants are compared by checking the types match and then calling the "equal" function against the primitive.
-#	Otherwise, falsy.
 module.exports = (platform, a, b) ->
 	if a is b then return true
 	if a.properties
