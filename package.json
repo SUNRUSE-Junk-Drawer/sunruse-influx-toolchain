@@ -1,9 +1,11 @@
 {
   "name": "sunruse-influx-toolchain",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This is a library of functions used to compile SUNRUSE.influx source code to expression trees so that it can be assembled to native code.  On requiring \"sunruse-influx-toolchain\", you will get an object containing the toolchain functions.",
   "main": "deploy/index.js",
   "dependencies": {
+  },
+  "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-coffee": "^0.13.0",
@@ -12,12 +14,11 @@
     "grunt-jasmine-nodejs": "^1.4.3",
     "jasmine-collection-matchers": "^0.1.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "grunt build test",
-    "prepublish": "grunt build test deploy",
-    "install": "grunt build test deploy"
+    "prepublish": "grunt build test deploy"
   },
+  "files": ["deploy"],
   "repository": {
     "type": "git",
     "url": "https://github.com/SUNRUSE/sunruse-influx-toolchain.git"
