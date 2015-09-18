@@ -36,7 +36,7 @@ Platforms are functions, implemented in external modules, returning objects cont
 	* compile: Takes a value object and returns a new value object describing the output if compilation succeeded, else, falsy.
 	* inputsEqual: Takes the platform and two value objects returned by separate calls to compile.  Return truthy when they should compile to the same native call, and falsy when they should not.
 	* output: String identifying the primitive type returned. 
-* compile: Takes the platform, an input value object, the output value object and returns generated native code.
+* compile: Takes the platform, an input value object, the output value object, an object containing any platform-specific options and returns generated native code.
 
 Typically, the following would be added afterwards:
 * functions: The tokenized functions.
